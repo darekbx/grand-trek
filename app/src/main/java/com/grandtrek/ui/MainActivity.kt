@@ -1,7 +1,8 @@
-package com.grandtrek
+package com.grandtrek.ui
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import com.grandtrek.R
 
 class MainActivity : AppCompatActivity() {
 
