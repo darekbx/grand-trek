@@ -52,6 +52,9 @@ class PositionProvider(val context: Context) {
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0L, 0F, listener)
     }
 
+    @SuppressWarnings("MissingPermission")
+    fun lastKnownLocation() = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+
     fun stopListening() {
         listener?.run {
             locationManager.removeUpdates(this)

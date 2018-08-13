@@ -1,11 +1,13 @@
 package com.grandtrek.ui.trip
 
 import android.content.pm.PackageManager
+import android.location.Location
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.preference.PreferenceManager
 import com.grandtrek.GrandTrekApplication
 import com.grandtrek.R
+import com.grandtrek.extensions.toGeoPoint
 import com.grandtrek.gps.PositionProvider
 import com.grandtrek.permissions.PermissionsHelper
 import kotlinx.android.synthetic.main.activity_trip.*
@@ -17,6 +19,7 @@ class TripActivity : AppCompatActivity() {
 
     companion object {
         val PERMISSIONS_REQUEST_CODE = 100
+        val DEFAULT_ZOOM = 18.0
     }
 
     @Inject
@@ -69,10 +72,16 @@ class TripActivity : AppCompatActivity() {
 
     private fun initializeTrip() {
         positionProvider.startListening(
-                { location -> },
+                { location -> updateLocation(location) },
                 { status -> },
                 { sattelites -> })
         initializeMap()
+    }
+
+    private fun updateLocation(location: Location) {
+        with(map_view.controller) {
+            animateTo(location.toGeoPoint())
+        }
     }
 
     private fun initializeMap() {
@@ -85,6 +94,13 @@ class TripActivity : AppCompatActivity() {
             setTileSource(TileSourceFactory.MAPNIK)
             setBuiltInZoomControls(true)
             setMultiTouchControls(true)
+        }
+
+
+        val lastLocation = positionProvider.lastKnownLocation()
+        with(map_view.controller) {
+            setZoom(DEFAULT_ZOOM)
+            setCenter(lastLocation.toGeoPoint())
         }
     }
 
