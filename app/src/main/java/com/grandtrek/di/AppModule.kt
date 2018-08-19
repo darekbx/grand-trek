@@ -3,6 +3,7 @@ package com.grandtrek.di
 import android.content.Context
 import com.grandtrek.GrandTrekApplication
 import com.grandtrek.gps.PositionProvider
+import com.grandtrek.modules.AverageSpeed
 import com.grandtrek.permissions.PermissionsHelper
 import dagger.Module
 import dagger.Provides
@@ -23,4 +24,7 @@ class AppModule(val application: GrandTrekApplication) {
 
     @Provides
     fun providePermissionsHelper(): PermissionsHelper = PermissionsHelper(application.applicationContext)
+
+    @Provides
+    fun provideAverageSpeed(): AverageSpeed = AverageSpeed()
 }

@@ -9,6 +9,8 @@ import com.grandtrek.GrandTrekApplication
 import com.grandtrek.R
 import com.grandtrek.extensions.toGeoPoint
 import com.grandtrek.gps.PositionProvider
+import com.grandtrek.modules.AverageSpeed
+import com.grandtrek.modules.plusAssign
 import com.grandtrek.permissions.PermissionsHelper
 import kotlinx.android.synthetic.main.activity_trip.*
 import org.osmdroid.config.Configuration
@@ -27,6 +29,9 @@ class TripActivity : AppCompatActivity() {
 
     @Inject
     lateinit var permissionsHandler: PermissionsHelper
+
+    @Inject
+    lateinit var averageSpeed: AverageSpeed
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,6 +84,11 @@ class TripActivity : AppCompatActivity() {
     }
 
     private fun updateLocation(location: Location) {
+
+        if (location.hasSpeed()) {
+            averageSpeed += location.speed
+        }
+
         with(map_view.controller) {
             animateTo(location.toGeoPoint())
         }
