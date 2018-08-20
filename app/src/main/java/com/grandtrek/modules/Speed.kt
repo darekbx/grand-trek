@@ -1,8 +1,8 @@
 package com.grandtrek.modules
 
-operator fun AverageSpeed.plusAssign(entry: Float) = add(entry)
+operator fun Speed.plusAssign(entry: Float) = add(entry)
 
-class AverageSpeed {
+class Speed {
 
     private val entries = mutableListOf<Float>()
 
@@ -11,4 +11,6 @@ class AverageSpeed {
     }
 
     fun average() = entries.sum() / entries.size
+
+    fun max() = entries.max()
 }
