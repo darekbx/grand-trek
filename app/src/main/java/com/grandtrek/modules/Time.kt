@@ -11,25 +11,26 @@ open class Time {
     var rideTime = 0
     var isRiding = false
 
-    private val task = object : TimerTask() {
-        override fun run() {
-            overallTime++
-            if (isRiding) {
-                rideTime++
-            }
+    fun start() {
+        reset()
+        timer = Timer().apply {
+            scheduleAtFixedRate(object : TimerTask() {
+                override fun run() {
+                    handleTick()
+                }
+            }, 0, getInterval())
         }
     }
 
-    fun start() {
-        reset()
-        timer = Timer()
-        timer?.scheduleAtFixedRate(task, 0, getInterval())
+    private fun handleTick() {
+        overallTime++
+        if (isRiding) {
+            rideTime++
+        }
     }
 
     fun stop() {
-        timer?.run {
-            cancel()
-        }
+        timer?.run { cancel() }
         timer = null
     }
 
@@ -38,5 +39,5 @@ open class Time {
         rideTime = 0
     }
 
-    fun getInterval() = 1L//TimeUnit.SECONDS.toMillis(1)
+    open fun getInterval() = TimeUnit.SECONDS.toMillis(1)
 }

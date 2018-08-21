@@ -5,11 +5,13 @@ import android.location.Location
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.support.v7.app.AlertDialog
 import com.grandtrek.GrandTrekApplication
 import com.grandtrek.R
 import com.grandtrek.extensions.toGeoPoint
 import com.grandtrek.gps.PositionProvider
 import com.grandtrek.modules.Speed
+import com.grandtrek.modules.Time
 import com.grandtrek.modules.plusAssign
 import com.grandtrek.permissions.PermissionsHelper
 import kotlinx.android.synthetic.main.activity_trip.*
@@ -21,7 +23,8 @@ class TripActivity : AppCompatActivity() {
 
     companion object {
         val PERMISSIONS_REQUEST_CODE = 100
-        val DEFAULT_ZOOM = 18.0
+        val DEFAULT_ZOOM = 16.0
+        val MAX_ZOOM = 16.0
     }
 
     @Inject
@@ -33,6 +36,11 @@ class TripActivity : AppCompatActivity() {
     @Inject
     lateinit var speed: Speed
 
+    @Inject
+    lateinit var time: Time
+
+    val zoom = DEFAULT_ZOOM
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (application as GrandTrekApplication).appComponent.inject(this)
@@ -43,6 +51,7 @@ class TripActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         positionProvider.stopListening()
+        time.stop()
     }
 
     override fun onPause() {
@@ -54,9 +63,26 @@ class TripActivity : AppCompatActivity() {
 
     private fun handlePermissions() {
         when (permissionsHandler.hasAllPermissions()) {
-            true -> initializeTrip()
+            true -> checkLocationEnabled()
             else -> requestPermissions(permissionsHandler.requiredPermissions, PERMISSIONS_REQUEST_CODE)
         }
+    }
+
+    private fun checkLocationEnabled() {
+        if (positionProvider.isLocationEnabled()) {
+            initializeTrip()
+        } else {
+            showEnableLocationDialog()
+        }
+    }
+
+    private fun showEnableLocationDialog() {
+        AlertDialog
+                .Builder(this)
+                .setTitle(R.string.app_name)
+                .setMessage(R.string.message_enable_location)
+                .setPositiveButton(R.string.ok, { a, b -> finish() })
+                .show()
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -90,6 +116,7 @@ class TripActivity : AppCompatActivity() {
         }
 
         with(map_view.controller) {
+            setZoom(zoom)
             animateTo(location.toGeoPoint())
         }
     }
@@ -104,13 +131,15 @@ class TripActivity : AppCompatActivity() {
             setTileSource(TileSourceFactory.MAPNIK)
             setBuiltInZoomControls(true)
             setMultiTouchControls(true)
+            setMaxZoomLevel(MAX_ZOOM)
         }
 
-
         val lastLocation = positionProvider.lastKnownLocation()
-        with(map_view.controller) {
-            setZoom(DEFAULT_ZOOM)
-            setCenter(lastLocation.toGeoPoint())
+        lastLocation?.let { lastLocation ->
+            with(map_view.controller) {
+                setZoom(zoom)
+                setCenter(lastLocation.toGeoPoint())
+            }
         }
     }
 

@@ -1,3 +1,6 @@
 <resources>
-    <string name="app_name">GrandTrek</string>
+    <string name="app_name">Grand Trek</string>
+
+    <string name="message_enable_location">Please enable location.</string>
+    <string name="ok">OK</string>
 </resources>

@@ -4,6 +4,7 @@ import android.content.Context
 import com.grandtrek.GrandTrekApplication
 import com.grandtrek.gps.PositionProvider
 import com.grandtrek.modules.Speed
+import com.grandtrek.modules.Time
 import com.grandtrek.permissions.PermissionsHelper
 import dagger.Module
 import dagger.Provides
@@ -20,11 +21,14 @@ class AppModule(val application: GrandTrekApplication) {
     fun provideContext(): Context = application
 
     @Provides
-    fun providePositionProvider(): PositionProvider = PositionProvider(application.applicationContext)
+    fun providePositionProvider() = PositionProvider(application.applicationContext)
 
     @Provides
-    fun providePermissionsHelper(): PermissionsHelper = PermissionsHelper(application.applicationContext)
+    fun providePermissionsHelper() = PermissionsHelper(application.applicationContext)
 
     @Provides
-    fun provideAverageSpeed(): Speed = Speed()
+    fun provideSpeed() = Speed()
+
+    @Provides
+    fun provideTime() = Time()
 }

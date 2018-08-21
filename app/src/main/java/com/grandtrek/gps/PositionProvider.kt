@@ -9,7 +9,7 @@ import android.os.Bundle
 
 class PositionProvider(val context: Context) {
 
-    private lateinit var listener: LocationListener
+    private var listener: LocationListener? = null
 
     enum class Status {
         ENABLED,
@@ -60,6 +60,8 @@ class PositionProvider(val context: Context) {
             locationManager.removeUpdates(this)
         }
     }
+
+    fun isLocationEnabled() = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
 
     private val locationManager by lazy {
         context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
