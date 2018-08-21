@@ -1,4 +1,4 @@
-package com.grandtrek.modules
+package com.grandtrek.usecases
 
 import org.junit.Test
 

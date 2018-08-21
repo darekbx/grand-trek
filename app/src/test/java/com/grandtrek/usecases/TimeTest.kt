@@ -1,4 +1,4 @@
-package com.grandtrek.modules
+package com.grandtrek.usecases
 
 import com.nhaarman.mockito_kotlin.whenever
 import kotlinx.coroutines.experimental.delay

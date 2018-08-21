@@ -1,4 +1,4 @@
-package com.grandtrek.modules
+package com.grandtrek.usecases
 
 import java.util.*
 import java.util.concurrent.TimeUnit

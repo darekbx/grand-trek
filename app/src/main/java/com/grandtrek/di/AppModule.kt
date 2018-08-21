@@ -3,9 +3,10 @@ package com.grandtrek.di
 import android.content.Context
 import com.grandtrek.GrandTrekApplication
 import com.grandtrek.gps.PositionProvider
-import com.grandtrek.modules.Speed
-import com.grandtrek.modules.Time
+import com.grandtrek.usecases.Speed
+import com.grandtrek.usecases.Time
 import com.grandtrek.permissions.PermissionsHelper
+import com.grandtrek.usecases.Distance
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -31,4 +32,7 @@ class AppModule(val application: GrandTrekApplication) {
 
     @Provides
     fun provideTime() = Time()
+
+    @Provides
+    fun provideDistance() = Distance()
 }

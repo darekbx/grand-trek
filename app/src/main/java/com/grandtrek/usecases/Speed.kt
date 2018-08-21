@@ -1,4 +1,4 @@
-package com.grandtrek.modules
+package com.grandtrek.usecases
 
 operator fun Speed.plusAssign(entry: Float) = add(entry)
 
