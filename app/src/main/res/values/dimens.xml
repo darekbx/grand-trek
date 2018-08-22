@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="tinyFont">10sp</dimen>
+    <dimen name="normalFont">24sp</dimen>
     <dimen name="outPadding">16dp</dimen>
     <dimen name="smallPadding">4dp</dimen>
 

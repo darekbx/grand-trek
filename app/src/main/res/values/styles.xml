@@ -15,4 +15,14 @@
         <item name="android:padding">@dimen/smallPadding</item>
     </style>
 
+    <style name="speedOutLabel">
+        <item name="android:layout_marginBottom">@dimen/outPadding</item>
+        <item name="android:textAlignment">center</item>
+    </style>
+
+    <style name="displayValue">
+        <item name="android:textSize">@dimen/normalFont</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
 </resources>

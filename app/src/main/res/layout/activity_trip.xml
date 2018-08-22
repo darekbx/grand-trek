@@ -30,24 +30,158 @@
         android:id="@+id/play_stop_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@id/map_view"
-        app:layout_constraintEnd_toEndOf="@id/map_view"
         android:layout_marginBottom="@dimen/outPadding"
         android:layout_marginEnd="@dimen/outPadding"
+        android:onClick="onStartStop"
         android:src="@drawable/ic_play"
-        />
+        app:layout_constraintBottom_toBottomOf="@id/map_view"
+        app:layout_constraintEnd_toEndOf="@id/map_view" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/pause_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@id/play_stop_button"
-        app:layout_constraintEnd_toEndOf="@id/play_stop_button"
         android:layout_marginBottom="@dimen/outPadding"
-        android:src="@drawable/ic_pause"
+        android:onClick="onPause"
         android:scaleType="center"
+        android:src="@drawable/ic_pause"
         app:fabSize="mini"
+        app:layout_constraintBottom_toTopOf="@id/play_stop_button"
+        app:layout_constraintEnd_toEndOf="@id/play_stop_button" />
+
+    <TextView
+        android:id="@+id/average_speed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/average_speed_label"
+        app:layout_constraintStart_toStartOf="@id/average_speed_label"
+        app:layout_constraintEnd_toEndOf="@id/average_speed_label"
+        android:layout_marginTop="@dimen/outPadding"
+        tools:text="10 km/h"
+        style="@style/displayValue"
+        />
+    <TextView
+        android:id="@+id/average_speed_label"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@id/speed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/speed"
+        android:text="@string/label_average_speed"
+        style="@style/speedOutLabel"
         />
 
+    <TextView
+        android:id="@+id/speed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/status"
+        app:layout_constraintStart_toEndOf="@id/average_speed_label"
+        app:layout_constraintEnd_toStartOf="@id/maximum_speed_label"
+        android:layout_marginTop="@dimen/smallPadding"
+        tools:text="27"
+
+        android:textColor="@color/black"
+        android:textSize="72sp"
+        android:textStyle="bold"
+        />
+
+    <TextView
+        android:id="@+id/maximum_speed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/maximum_speed_label"
+        app:layout_constraintEnd_toEndOf="@id/maximum_speed_label"
+        app:layout_constraintBottom_toTopOf="@id/maximum_speed_label"
+        tools:text="39 km/h"
+        style="@style/displayValue"
+        />
+    <TextView
+        android:id="@+id/maximum_speed_label"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@id/speed"
+        app:layout_constraintStart_toEndOf="@id/speed"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="@string/label_maximum_speed"
+        style="@style/speedOutLabel"
+        />
+
+
+    <TextView
+        android:id="@+id/distance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/speed"
+        app:layout_constraintStart_toStartOf="@id/distance_label"
+        app:layout_constraintEnd_toEndOf="@id/distance_label"
+        android:layout_marginTop="@dimen/outPadding"
+        tools:text="42.7 km"
+        style="@style/displayValue"
+        />
+    <TextView
+        android:id="@+id/distance_label"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/distance"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/speed"
+        android:text="@string/label_distance"
+        style="@style/speedOutLabel"
+        />
+
+    <TextView
+        android:id="@+id/trip_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/speed"
+        app:layout_constraintStart_toStartOf="@id/trip_time_label"
+        app:layout_constraintEnd_toEndOf="@id/trip_time_label"
+        android:layout_marginTop="@dimen/outPadding"
+        tools:text="0:00:00"
+        style="@style/displayValue"
+        />
+    <TextView
+        android:id="@+id/trip_time_label"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/distance"
+        app:layout_constraintStart_toStartOf="@id/speed"
+        app:layout_constraintEnd_toEndOf="@id/speed"
+        android:text="@string/label_trip_time"
+        style="@style/speedOutLabel"
+        />
+
+    <TextView
+        android:id="@+id/ride_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/speed"
+        app:layout_constraintStart_toStartOf="@id/ride_time_label"
+        app:layout_constraintEnd_toEndOf="@id/ride_time_label"
+        android:layout_marginTop="@dimen/outPadding"
+        tools:text="0:00:00"
+        style="@style/displayValue"
+        />
+    <TextView
+        android:id="@+id/ride_time_label"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/distance"
+        app:layout_constraintStart_toStartOf="@id/maximum_speed_label"
+        app:layout_constraintEnd_toEndOf="@id/maximum_speed_label"
+        android:text="@string/label_ride_time"
+        style="@style/speedOutLabel"
+        />
+
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/navigation"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@color/colorPrimary"
+        />
 
 </android.support.constraint.ConstraintLayout>
