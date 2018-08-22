@@ -15,12 +15,39 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         />
-
     <TextView
-        android:id="@+id/average_speed"
+        android:id="@+id/status"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/map_view"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="Satellites: 1, Status: SUCCESS"
+        style="@style/statusText"
+        />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/play_stop_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
+        app:layout_constraintBottom_toBottomOf="@id/map_view"
+        app:layout_constraintEnd_toEndOf="@id/map_view"
+        android:layout_marginBottom="@dimen/outPadding"
+        android:layout_marginEnd="@dimen/outPadding"
+        android:src="@drawable/ic_play"
         />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/pause_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/play_stop_button"
+        app:layout_constraintEnd_toEndOf="@id/play_stop_button"
+        android:layout_marginBottom="@dimen/outPadding"
+        android:src="@drawable/ic_pause"
+        android:scaleType="center"
+        app:fabSize="mini"
+        />
+
 
 </android.support.constraint.ConstraintLayout>

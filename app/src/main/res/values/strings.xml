@@ -4,4 +4,6 @@
     <string name="message_enable_location">Please enable location.</string>
     <string name="message_enable_permissions">You should grant all required permissions.</string>
     <string name="ok">OK</string>
+
+    <string name="status_format">Satellites: %d, Status: %s</string>
 </resources>

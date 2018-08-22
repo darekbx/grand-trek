@@ -21,7 +21,6 @@ import kotlinx.android.synthetic.main.activity_trip.*
 import org.osmdroid.config.Configuration
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import javax.inject.Inject
-import kotlin.math.max
 
 class TripActivity : AppCompatActivity() {
 
@@ -44,6 +43,7 @@ class TripActivity : AppCompatActivity() {
 
     val zoom = TripMap.DEFAULT_ZOOM
     var isRecording = false
+    var isAutoPositionOn = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,7 +57,8 @@ class TripActivity : AppCompatActivity() {
                     updateLocation(this)
                 }
             })
-            // TODO: liveStatus, liveStaellites
+            liveStatus.observe(this@TripActivity, Observer { updateStatus() })
+            liveSatellites.observe(this@TripActivity, Observer { updateStatus() })
         }
 
         with(viewModel) {
@@ -89,6 +90,16 @@ class TripActivity : AppCompatActivity() {
     }
 
     fun onPause(v: View) {
+    }
+
+    fun onAutoPositionSwitch() {
+        isAutoPositionOn = !isAutoPositionOn
+    }
+
+    private fun updateStatus() {
+        with(positionProvider) {
+            status.text = getString(R.string.status_format, liveSatellites.value ?: 0, liveStatus.value?.toString())
+        }
     }
 
     private fun handleRecordingState() {
@@ -140,8 +151,12 @@ class TripActivity : AppCompatActivity() {
     private fun updateLocation(location: Location) {
         viewModel.updateLocation(location)
         with(map_view.controller) {
-            setZoom(zoom)
-            animateTo(location.toGeoPoint())
+            if (zoom < 1) {
+                setZoom(zoom)
+            }
+            if (isAutoPositionOn) {
+                animateTo(location.toGeoPoint())
+            }
         }
     }
 
