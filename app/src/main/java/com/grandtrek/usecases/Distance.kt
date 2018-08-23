@@ -9,4 +9,6 @@ class Distance {
     fun add(meters: Float) {
         overallDistance += meters
     }
+
+    fun distanceInKilometers() = overallDistance / 1000
 }

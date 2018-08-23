@@ -51,6 +51,13 @@ class TripActivity : AppCompatActivity() {
 
         viewModel = ViewModelProviders.of(this, viewModelFactory)[TripViewModel::class.java]
 
+        handlePositionProviderUpdates()
+        handleViewModelUpdates()
+        handleTimeUpdates()
+        handlePermissions()
+    }
+
+    fun handlePositionProviderUpdates() {
         with(positionProvider) {
             liveLocation.observe(this@TripActivity, Observer { location ->
                 location?.run {
@@ -60,15 +67,49 @@ class TripActivity : AppCompatActivity() {
             liveStatus.observe(this@TripActivity, Observer { updateStatus() })
             liveSatellites.observe(this@TripActivity, Observer { updateStatus() })
         }
+    }
 
+    fun handleViewModelUpdates() {
         with(viewModel) {
-            currentSpeed.observe(this@TripActivity, Observer {  })
-            averageSpeed.observe(this@TripActivity, Observer {  })
-            maximumSpeed.observe(this@TripActivity, Observer {  })
-            currentDistance.observe(this@TripActivity, Observer {  })
+            currentSpeed.observe(this@TripActivity, Observer {
+                updateIsRiding(it)
+                updateCurrentSpeedText(it)
+            })
+            averageSpeed.observe(this@TripActivity, Observer { updateAverageSpeedText(it) })
+            maximumSpeed.observe(this@TripActivity, Observer { updateMaximumSpeedText(it) })
+            currentDistance.observe(this@TripActivity, Observer { updateCurrentDistanceText(it) })
         }
+    }
 
-        handlePermissions()
+    fun handleTimeUpdates() {
+        with(time) {
+            overallTime.observe(this@TripActivity, Observer { updateTripTimeView(it) })
+            rideTime.observe(this@TripActivity, Observer { updateRideTimeView(it) })
+        }
+    }
+
+    fun updateRideTimeView(it: Long?) {
+        ride_time.text = time.secondsToTimeFormat(it)
+    }
+
+    fun updateTripTimeView(it: Long?) {
+        trip_time.text = time.secondsToTimeFormat(it)
+    }
+
+    fun updateCurrentDistanceText(it: Float?) {
+        current_distance.text = formatKm(it)
+    }
+
+    fun updateMaximumSpeedText(it: Float?) {
+        maximum_speed.text = formatKmH(it)
+    }
+
+    fun updateAverageSpeedText(it: Float?) {
+        average_speed.text = formatKmH(it)
+    }
+
+    fun updateCurrentSpeedText(it: Float?) {
+        current_speed.text = formatIntKmH(it)
     }
 
     override fun onDestroy() {
@@ -96,9 +137,21 @@ class TripActivity : AppCompatActivity() {
         isAutoPositionOn = !isAutoPositionOn
     }
 
+    private fun formatIntKmH(value: Float?) = "${value?.toInt()}"
+    private fun formatKmH(value: Float?) = "%.2f km/h".format(value)
+    private fun formatKm(value: Float?) = "%.1f km".format(value)
+
     private fun updateStatus() {
         with(positionProvider) {
-            status.text = getString(R.string.status_format, liveSatellites.value ?: 0, liveStatus.value?.toString())
+            status.text = getString(R.string.status_format,
+                    liveSatellites.value ?: 0,
+                    liveStatus.value?.toString())
+        }
+    }
+
+    private fun updateIsRiding(speed: Float?) {
+        speed?.run {
+            time.isRiding = this > 0
         }
     }
 

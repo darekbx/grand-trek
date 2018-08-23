@@ -35,7 +35,7 @@ class TripViewModel @Inject constructor(
     private fun updateDistance(location: Location) {
         previousLocation?.let { previousLocation ->
             distance += previousLocation.distanceTo(location)
-            currentDistance.value = distance.overallDistance
+            currentDistance.value = distance.distanceInKilometers()
         }
     }
 

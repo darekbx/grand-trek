@@ -1,14 +1,21 @@
 package com.grandtrek.usecases
 
+import android.arch.lifecycle.MutableLiveData
 import java.util.*
 import java.util.concurrent.TimeUnit
 
 open class Time {
 
+    companion object {
+        val TIME_FORMAT = "%d:%02d:%02d"
+    }
+
     private var timer: Timer? = null
 
-    var overallTime = 0
-    var rideTime = 0
+    var overallTimeValue = 0L
+    var rideTimeValue = 0L
+    var overallTime = MutableLiveData<Long>()
+    var rideTime = MutableLiveData<Long>()
     var isRiding = false
 
     fun start() {
@@ -22,21 +29,39 @@ open class Time {
         }
     }
 
-    private fun handleTick() {
-        overallTime++
-        if (isRiding) {
-            rideTime++
-        }
-    }
-
     fun stop() {
         timer?.run { cancel() }
         timer = null
     }
 
     fun reset() {
-        overallTime = 0
-        rideTime = 0
+        overallTimeValue = 0
+        rideTimeValue = 0
+    }
+
+    fun secondsToTimeFormat(secondsIn: Long?): String {
+        return secondsIn?.run {
+            var seconds = secondsIn
+            val minuteSeconds = TimeUnit.MINUTES.toSeconds(1)
+            val hourSeconds = TimeUnit.HOURS.toSeconds(1)
+
+            val hours = seconds / TimeUnit.HOURS.toSeconds(1)
+            seconds -= hours * hourSeconds
+
+            val minutes = seconds / minuteSeconds
+            seconds -= minutes * minuteSeconds
+
+            return TIME_FORMAT.format(hours, minutes, seconds)
+        } ?: ""
+    }
+
+    private fun handleTick() {
+        overallTimeValue++
+        overallTime.postValue(overallTimeValue)
+        if (isRiding) {
+            rideTimeValue++
+            rideTime.postValue(rideTimeValue)
+        }
     }
 
     open fun getInterval() = TimeUnit.SECONDS.toMillis(1)
