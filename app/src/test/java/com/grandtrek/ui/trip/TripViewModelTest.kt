@@ -42,5 +42,7 @@ class TripViewModelTest {
         assertEquals(150F, distance.overallDistance)
         assertEquals(20f, speed.max())
         assertEquals(15f, speed.average())
+        assertEquals(72F, viewModel.maximumSpeed.value)
+        assertEquals(54F, viewModel.averageSpeed.value)
     }
 }

@@ -38,4 +38,16 @@ class SpeedTest {
         // Then
         assertEquals(5F, speed.average())
     }
+
+    @Test
+    fun msToKmh() {
+        // Given
+        val speed = Speed()
+
+        // When
+        val result = speed.msToKmh(5F)
+
+        // Then
+        assertEquals(18F, result, 0F)
+    }
 }

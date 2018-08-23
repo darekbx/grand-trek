@@ -42,9 +42,9 @@ class TripViewModel @Inject constructor(
     private fun updateSpeed(location: Location) {
         if (location.hasSpeed()) {
             speed += location.speed
-            currentSpeed.value = location.speed
-            averageSpeed.value = speed.average()
-            maximumSpeed.value = speed.max()
+            currentSpeed.value = speed.msToKmh(location.speed)
+            averageSpeed.value = speed.msToKmh(speed.average())
+            maximumSpeed.value = speed.msToKmh(speed.max())
         }
     }
 }
