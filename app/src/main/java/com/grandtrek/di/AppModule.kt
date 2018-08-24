@@ -7,6 +7,7 @@ import com.grandtrek.usecases.Speed
 import com.grandtrek.usecases.Time
 import com.grandtrek.permissions.PermissionsHelper
 import com.grandtrek.usecases.Distance
+import com.grandtrek.usecases.TripMap
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -35,4 +36,7 @@ class AppModule(val application: GrandTrekApplication) {
 
     @Provides
     fun provideDistance() = Distance()
+
+    @Provides
+    fun provdeTripMap() = TripMap()
 }

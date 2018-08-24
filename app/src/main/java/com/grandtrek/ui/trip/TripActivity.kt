@@ -4,22 +4,29 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.location.Location
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.view.View
+import android.view.WindowManager
 import com.grandtrek.GrandTrekApplication
 import com.grandtrek.R
 import com.grandtrek.extensions.toGeoPoint
 import com.grandtrek.gps.PositionProvider
 import com.grandtrek.usecases.Time
 import com.grandtrek.permissions.PermissionsHelper
+import com.grandtrek.ui.trip.map.CurrentLocationOverlay
 import com.grandtrek.usecases.TripMap
 import com.grandtrek.utils.UiUtils
 import kotlinx.android.synthetic.main.activity_trip.*
 import org.osmdroid.config.Configuration
+import org.osmdroid.tileprovider.MapTileProviderBasic
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
+import org.osmdroid.views.overlay.Polygon
+import org.osmdroid.views.overlay.TilesOverlay
+import java.io.File
 import javax.inject.Inject
 
 class TripActivity : AppCompatActivity() {
@@ -38,12 +45,16 @@ class TripActivity : AppCompatActivity() {
     lateinit var time: Time
 
     @Inject
+    lateinit var tripMap: TripMap
+
+    @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
     internal lateinit var viewModel: TripViewModel
 
     val zoom = TripMap.DEFAULT_ZOOM
     var isRecording = false
-    var isAutoPositionOn = false
+    var isAutoPositionOn = true
+    val currentLocationOverlay = CurrentLocationOverlay()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -133,7 +144,7 @@ class TripActivity : AppCompatActivity() {
     fun onPause(v: View) {
     }
 
-    fun onAutoPositionSwitch() {
+    fun onAutoPositionSwitch(v: View) {
         isAutoPositionOn = !isAutoPositionOn
     }
 
@@ -203,6 +214,7 @@ class TripActivity : AppCompatActivity() {
 
     private fun updateLocation(location: Location) {
         viewModel.updateLocation(location)
+        currentLocationOverlay.currentPosition = location.toGeoPoint()
         with(map_view.controller) {
             if (zoom < 1) {
                 setZoom(zoom)
@@ -216,14 +228,19 @@ class TripActivity : AppCompatActivity() {
     private fun initializeMap() {
         with(applicationContext) {
             Configuration.getInstance().load(this, PreferenceManager.getDefaultSharedPreferences(this))
+            Configuration.getInstance().osmdroidBasePath = File(TripMap.OSM_BASE_PATH)
         }
         initializeLayout()
+
+        val overlayOffline = offlineMapsOverlay()
 
         with(map_view) {
             setTileSource(TileSourceFactory.MAPNIK)
             setBuiltInZoomControls(true)
             setMultiTouchControls(true)
             setMaxZoomLevel(TripMap.MAX_ZOOM)
+            overlays.add(overlayOffline)
+            overlays.add(currentLocationOverlay)
         }
 
         val lastLocation = positionProvider.lastKnownLocation()
@@ -233,10 +250,23 @@ class TripActivity : AppCompatActivity() {
                 setCenter(lastLocation.toGeoPoint())
             }
         }
+
+    }
+
+    fun offlineMapsOverlay(): TilesOverlay {
+        val providerOffline = MapTileProviderBasic(this).apply {
+            tileSource = tripMap.offlineMapSource()
+        }
+        val overlayOffline = TilesOverlay(providerOffline, this).apply {
+            loadingBackgroundColor = Color.TRANSPARENT
+            loadingLineColor = Color.TRANSPARENT
+        }
+        return overlayOffline
     }
 
     private fun initializeLayout() {
         setContentView(R.layout.activity_trip)
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 
     private fun handlePermissionsDenial() {
