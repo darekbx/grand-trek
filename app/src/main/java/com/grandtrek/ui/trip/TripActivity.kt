@@ -17,14 +17,13 @@ import com.grandtrek.extensions.toGeoPoint
 import com.grandtrek.gps.PositionProvider
 import com.grandtrek.usecases.Time
 import com.grandtrek.permissions.PermissionsHelper
-import com.grandtrek.ui.trip.map.CurrentLocationOverlay
+import com.grandtrek.ui.trip.map.CustomOverlay
 import com.grandtrek.usecases.TripMap
 import com.grandtrek.utils.UiUtils
 import kotlinx.android.synthetic.main.activity_trip.*
 import org.osmdroid.config.Configuration
 import org.osmdroid.tileprovider.MapTileProviderBasic
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
-import org.osmdroid.views.overlay.Polygon
 import org.osmdroid.views.overlay.TilesOverlay
 import java.io.File
 import javax.inject.Inject
@@ -54,7 +53,7 @@ class TripActivity : AppCompatActivity() {
     val zoom = TripMap.DEFAULT_ZOOM
     var isRecording = false
     var isAutoPositionOn = true
-    val currentLocationOverlay = CurrentLocationOverlay()
+    val currentLocationOverlay = CustomOverlay()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -213,10 +212,12 @@ class TripActivity : AppCompatActivity() {
     }
 
     private fun updateLocation(location: Location) {
+        val geoPoint = location.toGeoPoint()
         viewModel.updateLocation(location)
-        currentLocationOverlay.currentPosition = location.toGeoPoint()
+        currentLocationOverlay.currentPosition = geoPoint
+        currentLocationOverlay.points.add(geoPoint)
         with(map_view.controller) {
-            if (zoom < 1) {
+            if (zoom <= 1) {
                 setZoom(zoom)
             }
             if (isAutoPositionOn) {
