@@ -12,11 +12,11 @@ class CustomOverlay : Overlay() {
 
     companion object {
         val RADIUS = 12F
-        val LINE_SIZE = 4F
+        val LINE_SIZE = 6F
     }
 
     var currentPosition = GeoPoint(0.0, 0.0)
-    var points = mutableListOf<GeoPoint>()
+    var points: MutableList<GeoPoint>? = null
 
     private val outFirstPoint = Point()
     private val outSecondPoint = Point()
@@ -26,7 +26,7 @@ class CustomOverlay : Overlay() {
         isAntiAlias = true
     }
     private val linePaint = Paint().apply {
-        color = Color.GREEN
+        color = Color.RED
         isAntiAlias = true
         strokeWidth = LINE_SIZE
     }
@@ -40,7 +40,7 @@ class CustomOverlay : Overlay() {
 
     private fun drawLine(c: Canvas?, mapView: MapView) {
         var previousPoint: GeoPoint? = null
-        points.forEach { actualPoint ->
+        points?.forEach { actualPoint ->
 
             if (previousPoint == null) {
                 previousPoint = actualPoint

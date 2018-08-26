@@ -3,9 +3,11 @@ package com.grandtrek.ui.trip
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.location.Location
+import com.grandtrek.extensions.toGeoPoint
 import com.grandtrek.usecases.Distance
 import com.grandtrek.usecases.Speed
 import com.grandtrek.usecases.plusAssign
+import org.osmdroid.util.GeoPoint
 import javax.inject.Inject
 
 class TripViewModel @Inject constructor(
@@ -18,12 +20,16 @@ class TripViewModel @Inject constructor(
     val maximumSpeed = MutableLiveData<Float>()
     val currentDistance = MutableLiveData<Float>()
 
+    var points = mutableListOf<GeoPoint>()
     var previousLocation: Location? = null
 
     fun updateLocation(location: Location) {
         updateDistance(location)
         updateSpeed(location)
         saveLocation(location)
+
+        val geoPoint = location.toGeoPoint()
+        points.add(geoPoint)
 
         previousLocation = location
     }

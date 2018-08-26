@@ -215,7 +215,7 @@ class TripActivity : AppCompatActivity() {
         val geoPoint = location.toGeoPoint()
         viewModel.updateLocation(location)
         currentLocationOverlay.currentPosition = geoPoint
-        currentLocationOverlay.points.add(geoPoint)
+        currentLocationOverlay.points = viewModel.points
         with(map_view.controller) {
             if (zoom <= 1) {
                 setZoom(zoom)
