@@ -11,4 +11,6 @@
     <string name="label_distance">Distance</string>
     <string name="label_trip_time">Trip time</string>
     <string name="label_ride_time">Ride time</string>
+    <string name="label_auto_positioning">Auto positioning</string>
+    <string name="label_use_offline_map">Use offline map</string>
 </resources>

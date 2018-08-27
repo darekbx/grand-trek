@@ -15,6 +15,25 @@ import org.robolectric.annotation.Config
 class TimeTest {
 
     @Test
+    fun `Pause on and off`() {
+        // Given
+        val time = spy(Time())
+        doReturn(50L).whenever(time).getInterval()
+
+        // When
+        time.start()
+        runBlocking { delay(20) }
+        time.pauseOnOff()
+        runBlocking { delay(120) }
+        time.start()
+        runBlocking { delay(50) }
+
+        // Then
+        time.stop()
+        assertEquals(3, time.overallTimeValue)
+    }
+
+    @Test
     fun overallTime() {
         // Given
         val time = spy(Time())
@@ -22,7 +41,7 @@ class TimeTest {
 
         // When
         time.start()
-        runBlocking { delay(200) }
+        runBlocking { delay(220) }
 
         // Then
         time.stop()
@@ -38,13 +57,13 @@ class TimeTest {
         // When
         time.start()
         time.isRiding = true
-        runBlocking { delay(110) }
+        runBlocking { delay(120) }
         time.isRiding = false
         runBlocking { delay(100) }
 
         // Then
         time.stop()
-        assertEquals(3, time.rideTimeValue)
+        assertEquals(4, time.rideTimeValue)
     }
 
     @Test

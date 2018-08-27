@@ -32,6 +32,7 @@ class TripActivity : AppCompatActivity() {
 
     companion object {
         val PERMISSIONS_REQUEST_CODE = 100
+        val MINIMUM_RECORDED_SPEED = 2f
     }
 
     @Inject
@@ -137,14 +138,43 @@ class TripActivity : AppCompatActivity() {
 
     fun onStartStop(v: View) {
         isRecording = !isRecording
+        changeButtonsState()
         handleRecordingState()
     }
 
+    fun changeButtonsState() {
+        when (isRecording) {
+            true -> {
+                play_stop_button.setImageResource(R.drawable.ic_stop)
+                pause_button.show()
+            }
+            false -> {
+                play_stop_button.setImageResource(R.drawable.ic_play)
+                pause_button.hide()
+            }
+        }
+    }
+
     fun onPause(v: View) {
+        time.pauseOnOff()
+        isRecording = false
+        changeButtonsState()
     }
 
     fun onAutoPositionSwitch(v: View) {
         isAutoPositionOn = !isAutoPositionOn
+    }
+
+    fun onUseOfflineMap(v: View) {
+        addRemoveOfflineOverlay()
+    }
+
+    fun addRemoveOfflineOverlay() {
+        val offlineOverlay = map_view.overlays.firstOrNull { it is TilesOverlay }
+        when (use_offline_map.isEnabled) {
+            true -> map_view.overlays.add(offlineMapsOverlay())
+            else -> map_view.overlays.remove(offlineOverlay)
+        }
     }
 
     private fun formatIntKmH(value: Float?) = "${value?.toInt()}"
@@ -212,14 +242,14 @@ class TripActivity : AppCompatActivity() {
     }
 
     private fun updateLocation(location: Location) {
-        val geoPoint = location.toGeoPoint()
-        viewModel.updateLocation(location)
-        currentLocationOverlay.currentPosition = geoPoint
-        currentLocationOverlay.points = viewModel.points
+        if (location.speed > MINIMUM_RECORDED_SPEED) {
+            val geoPoint = location.toGeoPoint()
+            viewModel.updateLocation(location)
+            currentLocationOverlay.currentPosition = geoPoint
+            currentLocationOverlay.points = viewModel.points
+        }
         with(map_view.controller) {
-            if (zoom <= 1) {
-                setZoom(zoom)
-            }
+            setZoom(zoom)
             if (isAutoPositionOn) {
                 animateTo(location.toGeoPoint())
             }
@@ -234,7 +264,6 @@ class TripActivity : AppCompatActivity() {
         initializeLayout()
 
         val overlayOffline = offlineMapsOverlay()
-
         with(map_view) {
             setTileSource(TileSourceFactory.MAPNIK)
             setBuiltInZoomControls(true)
@@ -251,7 +280,6 @@ class TripActivity : AppCompatActivity() {
                 setCenter(lastLocation.toGeoPoint())
             }
         }
-
     }
 
     fun offlineMapsOverlay(): TilesOverlay {
