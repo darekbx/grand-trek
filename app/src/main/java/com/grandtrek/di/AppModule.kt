@@ -2,6 +2,8 @@ package com.grandtrek.di
 
 import android.content.Context
 import com.grandtrek.GrandTrekApplication
+import com.grandtrek.data.Repository
+import com.grandtrek.data.local.AppDatabase
 import com.grandtrek.gps.PositionProvider
 import com.grandtrek.usecases.Speed
 import com.grandtrek.usecases.Time
@@ -38,5 +40,8 @@ class AppModule(val application: GrandTrekApplication) {
     fun provideDistance() = Distance()
 
     @Provides
-    fun provdeTripMap() = TripMap()
+    fun provideTripMap() = TripMap()
+
+    @Provides
+    fun provideRepository(appDatabase: AppDatabase) = Repository(appDatabase)
 }

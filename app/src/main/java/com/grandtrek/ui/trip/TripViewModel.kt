@@ -3,17 +3,26 @@ package com.grandtrek.ui.trip
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.location.Location
+import com.grandtrek.data.Repository
+import com.grandtrek.data.local.entities.RouteEntity
 import com.grandtrek.extensions.toGeoPoint
 import com.grandtrek.usecases.Distance
 import com.grandtrek.usecases.Speed
+import com.grandtrek.usecases.Time
 import com.grandtrek.usecases.plusAssign
+import kotlinx.coroutines.experimental.async
 import org.osmdroid.util.GeoPoint
+import java.util.*
 import javax.inject.Inject
 
 class TripViewModel @Inject constructor(
         private val speed: Speed,
-        private val distance: Distance
+        private val distance: Distance,
+        private val time: Time,
+        private val repository: Repository
 ): ViewModel() {
+
+    private var routeId: Long? = null
 
     val currentSpeed = MutableLiveData<Float>()
     val averageSpeed = MutableLiveData<Float>()
@@ -22,6 +31,56 @@ class TripViewModel @Inject constructor(
 
     var points = mutableListOf<GeoPoint>()
     var previousLocation: Location? = null
+
+    fun startTime() {
+        time.start()
+    }
+
+    fun stopTime() {
+        time.stop()
+    }
+
+    fun setIsRiding(isRiding: Boolean) {
+        time.isRiding = isRiding
+    }
+
+    fun pauseOnOff() {
+        time.pauseOnOff()
+    }
+
+    fun secondsToTimeFormat(secondsIn: Long?) = time.secondsToTimeFormat(secondsIn)
+
+    fun overallTime() = time.overallTime
+    fun rideTime() = time.rideTime
+
+    fun createRoute() {
+        async {
+            routeId = repository.createEmptyRoute()
+        }
+    }
+
+    fun updateRecordedRoute(name: String, color: Int) {
+        val route = RouteEntity(
+                id = routeId,
+                name = name,
+                distance = distance.overallDistance,
+                averageSpeed = speed.average(),
+                maximumSpeed = speed.max(),
+                color = color,
+                date = Calendar.getInstance().timeInMillis,
+                tripTime = time.overallTimeValue)
+        async {
+            repository.updateRoute(route)
+        }
+    }
+
+    fun discardRoute() {
+        async {
+            routeId?.run {
+                repository.deleteRoute(this)
+            }
+        }
+    }
 
     fun updateLocation(location: Location) {
         updateDistance(location)

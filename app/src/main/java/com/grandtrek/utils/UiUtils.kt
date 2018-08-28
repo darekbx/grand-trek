@@ -13,7 +13,7 @@ class UiUtils {
                     .Builder(context)
                     .setTitle(R.string.app_name)
                     .setMessage(messageId)
-                    .setPositiveButton(R.string.ok, { a, b -> onAction() })
+                    .setPositiveButton(R.string.ok, { _, b -> onAction() })
                     .show()
         }
     }

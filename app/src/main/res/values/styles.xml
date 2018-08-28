@@ -31,5 +31,19 @@
         <item name="android:textSize">72sp</item>
         <item name="android:textStyle">bold</item>
     </style>
+    
+    <style name="defaultButton">
+        <item name="android:textColor">@color/colorPrimaryDark</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="android:paddingEnd">@dimen/outPadding</item>
+        <item name="android:paddingStart">@dimen/outPadding</item>
+    </style>
+
+    <style name="colorButton">
+        <item name="android:textOn"></item>
+        <item name="android:textOff"></item>
+        <item name="android:background">@drawable/bg_color_button</item>
+    </style>
 
 </resources>

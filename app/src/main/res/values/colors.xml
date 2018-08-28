@@ -6,4 +6,10 @@
 
     <color name="lightgrey">#aaa</color>
     <color name="black">#000</color>
+
+    <color name="violet">#8E24AA</color>
+    <color name="red">#E53935</color>
+    <color name="orange">#FFB300</color>
+    <color name="green">#7CB342</color>
+    <color name="blue">#3949AB</color>
 </resources>

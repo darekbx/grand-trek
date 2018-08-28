@@ -4,5 +4,8 @@
     <dimen name="normalFont">24sp</dimen>
     <dimen name="outPadding">16dp</dimen>
     <dimen name="smallPadding">4dp</dimen>
+    <dimen name="colorButtonSize">46dp</dimen>
+    <dimen name="colorButtonCorners">4dp</dimen>
+    <dimen name="colorButtonSelectedOffset">3dp</dimen>
 
 </resources>

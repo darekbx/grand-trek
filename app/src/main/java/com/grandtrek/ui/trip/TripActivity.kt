@@ -15,8 +15,8 @@ import com.grandtrek.GrandTrekApplication
 import com.grandtrek.R
 import com.grandtrek.extensions.toGeoPoint
 import com.grandtrek.gps.PositionProvider
-import com.grandtrek.usecases.Time
 import com.grandtrek.permissions.PermissionsHelper
+import com.grandtrek.ui.trip.dialogs.SaveRouteDialog
 import com.grandtrek.ui.trip.map.CustomOverlay
 import com.grandtrek.usecases.TripMap
 import com.grandtrek.utils.UiUtils
@@ -40,9 +40,6 @@ class TripActivity : AppCompatActivity() {
 
     @Inject
     lateinit var permissionsHandler: PermissionsHelper
-
-    @Inject
-    lateinit var time: Time
 
     @Inject
     lateinit var tripMap: TripMap
@@ -93,18 +90,18 @@ class TripActivity : AppCompatActivity() {
     }
 
     fun handleTimeUpdates() {
-        with(time) {
-            overallTime.observe(this@TripActivity, Observer { updateTripTimeView(it) })
-            rideTime.observe(this@TripActivity, Observer { updateRideTimeView(it) })
+        with(viewModel) {
+            overallTime().observe(this@TripActivity, Observer { updateTripTimeView(it) })
+            rideTime().observe(this@TripActivity, Observer { updateRideTimeView(it) })
         }
     }
 
     fun updateRideTimeView(it: Long?) {
-        ride_time.text = time.secondsToTimeFormat(it)
+        ride_time.text = viewModel.secondsToTimeFormat(it)
     }
 
     fun updateTripTimeView(it: Long?) {
-        trip_time.text = time.secondsToTimeFormat(it)
+        trip_time.text = viewModel.secondsToTimeFormat(it)
     }
 
     fun updateCurrentDistanceText(it: Float?) {
@@ -126,7 +123,7 @@ class TripActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         positionProvider.stopListening()
-        time.stop()
+        viewModel.stopTime()
     }
 
     override fun onPause() {
@@ -140,6 +137,14 @@ class TripActivity : AppCompatActivity() {
         isRecording = !isRecording
         changeButtonsState()
         handleRecordingState()
+
+        if (isRecording) {
+            viewModel.createRoute()
+        } else {
+            SaveRouteDialog(this,
+                    { name, color -> viewModel.updateRecordedRoute(name, color) },
+                    { viewModel.discardRoute() }).show()
+        }
     }
 
     fun changeButtonsState() {
@@ -156,7 +161,7 @@ class TripActivity : AppCompatActivity() {
     }
 
     fun onPause(v: View) {
-        time.pauseOnOff()
+        viewModel.pauseOnOff()
         isRecording = false
         changeButtonsState()
     }
@@ -191,14 +196,14 @@ class TripActivity : AppCompatActivity() {
 
     private fun updateIsRiding(speed: Float?) {
         speed?.run {
-            time.isRiding = this > 0
+            viewModel.setIsRiding(this > 0)
         }
     }
 
     private fun handleRecordingState() {
         when (isRecording) {
-            true -> time.start()
-            else -> time.stop()
+            true -> viewModel.startTime()
+            else -> viewModel.stopTime()
         }
     }
 
