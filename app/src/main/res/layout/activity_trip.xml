@@ -10,7 +10,7 @@
     <org.osmdroid.views.MapView
         android:id="@+id/map_view"
         android:layout_width="0dp"
-        android:layout_height="300dp"
+        android:layout_height="260dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -182,9 +182,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/navigation"
+        app:layout_constraintBottom_toTopOf="@id/use_offline_map"
         android:layout_marginBottom="4dp"
-        android:layout_marginRight="4dp"
+        android:layout_marginRight="@dimen/outPadding"
         android:text="@string/label_auto_positioning"
         android:onClick="onAutoPositionSwitch"
         android:checked="true"
@@ -193,13 +193,23 @@
         android:id="@+id/use_offline_map"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/navigation"
-        android:layout_marginBottom="4dp"
-        android:layout_marginLeft="4dp"
+        android:layout_marginBottom="12dp"
+        android:layout_marginRight="@dimen/outPadding"
         android:text="@string/label_use_offline_map"
         android:onClick="onUseOfflineMap"
         android:checked="true"
+        />
+
+    <com.grandtrek.ui.trip.views.AltitudeChart
+        android:id="@+id/altitude_chart"
+        android:layout_width="162dp"
+        android:layout_height="48dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/navigation"
+        android:layout_marginStart="@dimen/outPadding"
+        android:layout_marginBottom="@dimen/outPadding"
         />
 
     <android.support.design.widget.BottomNavigationView

@@ -253,6 +253,8 @@ class TripActivity : AppCompatActivity() {
             currentLocationOverlay.currentPosition = geoPoint
             currentLocationOverlay.points = viewModel.points
         }
+        altitude_chart.altitudes.add(location.altitude)
+        altitude_chart.invalidate()
         with(map_view.controller) {
             setZoom(zoom)
             if (isAutoPositionOn) {

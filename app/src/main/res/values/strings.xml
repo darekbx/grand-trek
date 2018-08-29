@@ -11,6 +11,7 @@
     <string name="label_average_speed">Average Speed</string>
     <string name="label_maximum_speed">Maximum Speed</string>
     <string name="label_distance">Distance</string>
+    <string name="label_altitude">Altitude</string>
     <string name="label_trip_time">Trip time</string>
     <string name="label_ride_time">Ride time</string>
     <string name="label_auto_positioning">Auto positioning</string>

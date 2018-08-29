@@ -24,7 +24,9 @@ class Repository @Inject constructor(
     }
 
     fun updateRoute(routeEntity: RouteEntity) {
-        dao.updateRoute(routeEntity)
+        with(routeEntity) {
+            dao.updateRoute(id, name, distance, averageSpeed, maximumSpeed, color, date, tripTime)
+        }
     }
 
     fun deleteRoute(routeId: Long) {

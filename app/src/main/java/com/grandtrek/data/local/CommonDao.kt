@@ -3,7 +3,6 @@ package com.grandtrek.data.local
 import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Insert
 import android.arch.persistence.room.Query
-import android.arch.persistence.room.Update
 import com.grandtrek.data.local.entities.PointEntity
 import com.grandtrek.data.local.entities.RouteEntity
 
@@ -22,8 +21,13 @@ interface CommonDao {
     @Query("SELECT * FROM point WHERE route_id = :routeId")
     fun fetchRoutePoints(routeId: Long): List<PointEntity>
 
-    @Update
-    fun updateRoute(routeEntity: RouteEntity)
+    @Query("""UPDATE route
+        SET
+        name = :name, distance = :distance, average_spped = :averageSpeed,
+        maximum_spped = :maximumSpeed, triptime = :tripTime, date = :date, color = :color
+        WHERE id = :routeId""")
+    fun updateRoute(routeId: Long?, name: String?, distance: Float, averageSpeed: Float,
+                    maximumSpeed: Float, color: Int, date: Long, tripTime: Long)
 
     @Query("DELETE FROM point WHERE route_id = :routeId")
     fun deletePoints(routeId: Long)
