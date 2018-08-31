@@ -1,6 +1,6 @@
 package com.grandtrek.di
 
-import com.grandtrek.ui.trip.TripActivity
+import com.grandtrek.ui.trip.TripFragment
 import dagger.Component
 import javax.inject.Singleton
 
@@ -8,5 +8,5 @@ import javax.inject.Singleton
 @Component(modules = arrayOf(AppModule::class, ViewModelModule::class, DatabaseModule::class))
 interface AppComponent {
 
-    fun inject(tripActivity: TripActivity)
+    fun inject(tripFragment: TripFragment)
 }

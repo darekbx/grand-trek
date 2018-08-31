@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.trip.TripActivity">
+    tools:context=".ui.trip.TripFragment">
 
     <org.osmdroid.views.MapView
         android:id="@+id/map_view"
@@ -32,7 +32,6 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/outPadding"
         android:layout_marginEnd="@dimen/outPadding"
-        android:onClick="onStartStop"
         android:src="@drawable/ic_play"
         app:layout_constraintBottom_toBottomOf="@id/map_view"
         app:layout_constraintEnd_toEndOf="@id/map_view" />
@@ -172,7 +171,6 @@
         android:layout_marginBottom="4dp"
         android:layout_marginRight="@dimen/outPadding"
         android:text="@string/label_auto_positioning"
-        android:onClick="onAutoPositionSwitch"
         android:checked="true"
         />
     <Switch
@@ -180,11 +178,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/navigation"
+        app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginBottom="12dp"
         android:layout_marginRight="@dimen/outPadding"
         android:text="@string/label_use_offline_map"
-        android:onClick="onUseOfflineMap"
         android:checked="false"
         />
 
@@ -193,22 +190,9 @@
         android:layout_width="162dp"
         android:layout_height="48dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/navigation"
+        app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginStart="@dimen/outPadding"
         android:layout_marginBottom="@dimen/outPadding"
-        />
-
-    <android.support.design.widget.BottomNavigationView
-        android:id="@+id/navigation"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:background="@color/colorPrimary"
-        app:itemTextColor="@android:color/white"
-        app:itemIconTint="@android:color/white"
-        app:menu="@menu/main_menu"
         />
 
 </android.support.constraint.ConstraintLayout>

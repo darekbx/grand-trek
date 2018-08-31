@@ -1,21 +1,16 @@
 package com.grandtrek.ui
 
-import android.content.Intent
 import android.support.design.widget.BottomNavigationView
 import android.support.v7.app.AppCompatActivity
-import com.grandtrek.R
-import com.grandtrek.ui.routes.RoutesActivity
-import com.grandtrek.ui.statistics.StatisticsActivity
-import com.grandtrek.ui.trip.TripActivity
 
 open class BaseActivity : AppCompatActivity() {
 
     open fun handleNavigation(bottomNavigationView: BottomNavigationView) {
-        bottomNavigationView.setOnNavigationItemSelectedListener {
+     /*   bottomNavigationView.setOnNavigationItemSelectedListener {
             val clazz = when (it.itemId) {
                 R.id.action_trip -> TripActivity::class.java
-                R.id.action_routes -> RoutesActivity::class.java
-                R.id.action_statistics -> StatisticsActivity::class.java
+                R.id.action_routes -> RoutesFragment::class.java
+                R.id.action_statistics -> StatisticsFragment::class.java
                 else -> TripActivity::class.java
             }
             if (this@BaseActivity::class.java != clazz) {
@@ -28,9 +23,9 @@ open class BaseActivity : AppCompatActivity() {
 
         bottomNavigationView.selectedItemId = when  {
             this is TripActivity -> R.id.action_trip
-            this is RoutesActivity -> R.id.action_routes
-            this is StatisticsActivity -> R.id.action_statistics
+            this is RoutesFragment -> R.id.action_routes
+            this is StatisticsFragment -> R.id.action_statistics
             else -> R.id.action_trip
-        }
+        }*/
     }
 }

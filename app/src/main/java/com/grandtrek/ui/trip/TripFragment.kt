@@ -6,22 +6,23 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.location.Location
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.support.v4.app.Fragment
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.WindowManager
 import com.grandtrek.GrandTrekApplication
 import com.grandtrek.R
 import com.grandtrek.extensions.toGeoPoint
 import com.grandtrek.gps.PositionProvider
 import com.grandtrek.permissions.PermissionsHelper
-import com.grandtrek.ui.BaseActivity
 import com.grandtrek.ui.trip.dialogs.SaveRouteDialog
 import com.grandtrek.ui.trip.map.CustomOverlay
 import com.grandtrek.usecases.TripMap
 import com.grandtrek.utils.UiUtils
-import kotlinx.android.synthetic.main.activity_trip.*
+import kotlinx.android.synthetic.main.fragment_trip.*
 import org.osmdroid.config.Configuration
 import org.osmdroid.tileprovider.MapTileProviderBasic
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
@@ -29,7 +30,7 @@ import org.osmdroid.views.overlay.TilesOverlay
 import java.io.File
 import javax.inject.Inject
 
-class TripActivity : BaseActivity() {
+class TripFragment : Fragment() {
 
     companion object {
         val PERMISSIONS_REQUEST_CODE = 100
@@ -54,9 +55,14 @@ class TripActivity : BaseActivity() {
     var isAutoPositionOn = true
     val currentLocationOverlay = CustomOverlay()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        (application as GrandTrekApplication).appComponent.inject(this)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_trip, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        (activity?.application as GrandTrekApplication)?.appComponent.inject(this)
+        activity?.getWindow()?.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         viewModel = ViewModelProviders.of(this, viewModelFactory)[TripViewModel::class.java]
 
@@ -64,36 +70,44 @@ class TripActivity : BaseActivity() {
         handleViewModelUpdates()
         handleTimeUpdates()
         handlePermissions()
+
+        handleButtons()
+    }
+
+    fun handleButtons() {
+        play_stop_button.setOnClickListener { onStartStop() }
+        auto_position.setOnClickListener { onAutoPositionSwitch() }
+        use_offline_map.setOnClickListener { onUseOfflineMap() }
     }
 
     fun handlePositionProviderUpdates() {
         with(positionProvider) {
-            liveLocation.observe(this@TripActivity, Observer { location ->
+            liveLocation.observe(this@TripFragment, Observer { location ->
                 location?.run {
                     updateLocation(this)
                 }
             })
-            liveStatus.observe(this@TripActivity, Observer { updateStatus() })
-            liveSatellites.observe(this@TripActivity, Observer { updateStatus() })
+            liveStatus.observe(this@TripFragment, Observer { updateStatus() })
+            liveSatellites.observe(this@TripFragment, Observer { updateStatus() })
         }
     }
 
     fun handleViewModelUpdates() {
         with(viewModel) {
-            currentSpeed.observe(this@TripActivity, Observer {
+            currentSpeed.observe(this@TripFragment, Observer {
                 updateIsRiding(it)
                 updateCurrentSpeedText(it)
             })
-            averageSpeed.observe(this@TripActivity, Observer { updateAverageSpeedText(it) })
-            maximumSpeed.observe(this@TripActivity, Observer { updateMaximumSpeedText(it) })
-            currentDistance.observe(this@TripActivity, Observer { updateCurrentDistanceText(it) })
+            averageSpeed.observe(this@TripFragment, Observer { updateAverageSpeedText(it) })
+            maximumSpeed.observe(this@TripFragment, Observer { updateMaximumSpeedText(it) })
+            currentDistance.observe(this@TripFragment, Observer { updateCurrentDistanceText(it) })
         }
     }
 
     fun handleTimeUpdates() {
         with(viewModel) {
-            overallTime().observe(this@TripActivity, Observer { updateTripTimeView(it) })
-            rideTime().observe(this@TripActivity, Observer { updateRideTimeView(it) })
+            overallTime().observe(this@TripFragment, Observer { updateTripTimeView(it) })
+            rideTime().observe(this@TripFragment, Observer { updateRideTimeView(it) })
         }
     }
 
@@ -134,7 +148,7 @@ class TripActivity : BaseActivity() {
         }
     }
 
-    fun onStartStop(v: View) {
+    fun onStartStop() {
         isRecording = !isRecording
         changeButtonsState()
         handleRecordingState()
@@ -142,9 +156,11 @@ class TripActivity : BaseActivity() {
         if (isRecording) {
             viewModel.createRoute()
         } else {
-            SaveRouteDialog(this,
-                    { name, color -> viewModel.updateRecordedRoute(name, color) },
-                    { viewModel.discardRoute() }).show()
+            context?.run {
+                SaveRouteDialog(this,
+                        { name, color -> viewModel.updateRecordedRoute(name, color) },
+                        { viewModel.discardRoute() }).show()
+            }
         }
     }
 
@@ -155,11 +171,11 @@ class TripActivity : BaseActivity() {
         }
     }
 
-    fun onAutoPositionSwitch(v: View) {
+    fun onAutoPositionSwitch() {
         isAutoPositionOn = !isAutoPositionOn
     }
 
-    fun onUseOfflineMap(v: View) {
+    fun onUseOfflineMap() {
         addRemoveOfflineOverlay()
     }
 
@@ -212,7 +228,9 @@ class TripActivity : BaseActivity() {
     }
 
     private fun showEnableLocationDialog() {
-        UiUtils.showDialog(this, R.string.message_enable_location, { finish() })
+        context?.run {
+            UiUtils.showDialog(this, R.string.message_enable_location, { activity?.finish() })
+        }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -268,11 +286,10 @@ class TripActivity : BaseActivity() {
     }
 
     private fun initializeMap() {
-        with(applicationContext) {
+        with(context) {
             Configuration.getInstance().load(this, PreferenceManager.getDefaultSharedPreferences(this))
             Configuration.getInstance().osmdroidBasePath = File(TripMap.OSM_BASE_PATH)
         }
-        initializeLayout()
 
         with(map_view) {
             setTileSource(TileSourceFactory.MAPNIK)
@@ -291,24 +308,22 @@ class TripActivity : BaseActivity() {
         }
     }
 
-    fun offlineMapsOverlay(): TilesOverlay {
-        val providerOffline = MapTileProviderBasic(this).apply {
-            tileSource = tripMap.offlineMapSource()
-        }
-        val overlayOffline = TilesOverlay(providerOffline, this).apply {
-            loadingBackgroundColor = Color.TRANSPARENT
-            loadingLineColor = Color.TRANSPARENT
-        }
-        return overlayOffline
-    }
-
-    private fun initializeLayout() {
-        setContentView(R.layout.activity_trip)
-        handleNavigation(navigation)
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+    fun offlineMapsOverlay(): TilesOverlay? {
+        return context?.run {
+            val providerOffline = MapTileProviderBasic(this).apply {
+                tileSource = tripMap.offlineMapSource()
+            }
+            val overlayOffline = TilesOverlay(providerOffline, this).apply {
+                loadingBackgroundColor = Color.TRANSPARENT
+                loadingLineColor = Color.TRANSPARENT
+            }
+            return overlayOffline
+        } ?: null
     }
 
     private fun handlePermissionsDenial() {
-        UiUtils.showDialog(this, R.string.message_enable_permissions, { finish() })
+        context?.run {
+            UiUtils.showDialog(this, R.string.message_enable_permissions, { activity?.finish() })
+        }
     }
 }
