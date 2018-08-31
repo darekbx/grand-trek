@@ -2,6 +2,7 @@ package com.grandtrek.di
 
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
+import com.grandtrek.ui.routes.RoutesViewModel
 import com.grandtrek.ui.trip.TripViewModel
 import dagger.Binds
 import dagger.Module
@@ -18,4 +19,8 @@ abstract class ViewModelModule {
     @ViewModelFactory.ViewModelKey(TripViewModel::class)
     internal abstract fun bindTripViewModel(viewModel: TripViewModel): ViewModel
 
+    @Binds
+    @IntoMap
+    @ViewModelFactory.ViewModelKey(RoutesViewModel::class)
+    internal abstract fun bindRoutesViewModel(viewModel: RoutesViewModel): ViewModel
 }

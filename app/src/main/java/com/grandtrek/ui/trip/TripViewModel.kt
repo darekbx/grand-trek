@@ -44,7 +44,7 @@ class TripViewModel @Inject constructor(
         time.isRiding = isRiding
     }
 
-    fun secondsToTimeFormat(secondsIn: Long?) = time.secondsToTimeFormat(secondsIn)
+    fun secondsToTimeFormat(secondsIn: Long?) = Time.secondsToTimeFormat(secondsIn)
 
     fun overallTime() = time.overallTime
     fun rideTime() = time.rideTime

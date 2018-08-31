@@ -8,6 +8,22 @@ open class Time {
 
     companion object {
         val TIME_FORMAT = "%d:%02d:%02d"
+
+        fun secondsToTimeFormat(secondsIn: Long?): String {
+            return secondsIn?.run {
+                var seconds = secondsIn
+                val minuteSeconds = TimeUnit.MINUTES.toSeconds(1)
+                val hourSeconds = TimeUnit.HOURS.toSeconds(1)
+
+                val hours = seconds / TimeUnit.HOURS.toSeconds(1)
+                seconds -= hours * hourSeconds
+
+                val minutes = seconds / minuteSeconds
+                seconds -= minutes * minuteSeconds
+
+                return TIME_FORMAT.format(hours, minutes, seconds)
+            } ?: ""
+        }
     }
 
     private var timer: Timer? = null

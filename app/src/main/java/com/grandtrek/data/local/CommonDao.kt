@@ -1,5 +1,6 @@
 package com.grandtrek.data.local
 
+import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Insert
 import android.arch.persistence.room.Query
@@ -16,10 +17,10 @@ interface CommonDao {
     fun addPoint(pointEntity: PointEntity)
 
     @Query("SELECT * FROM route")
-    fun fetchRoutes(): List<RouteEntity>
+    fun fetchRoutes(): LiveData<List<RouteEntity>>
 
     @Query("SELECT * FROM point WHERE route_id = :routeId")
-    fun fetchRoutePoints(routeId: Long): List<PointEntity>
+    fun fetchRoutePoints(routeId: Long): LiveData<List<PointEntity>>
 
     @Query("""UPDATE route
         SET
