@@ -119,16 +119,16 @@ class TripFragment : Fragment() {
         trip_time.text = viewModel.secondsToTimeFormat(it)
     }
 
-    fun updateCurrentDistanceText(it: Float?) {
-        current_distance.text = formatKm(it)
+    fun updateCurrentDistanceText(value: String?) {
+        current_distance.text = value
     }
 
-    fun updateMaximumSpeedText(it: Float?) {
-        maximum_speed.text = formatKmH(it)
+    fun updateMaximumSpeedText(value: String?) {
+        maximum_speed.text = value
     }
 
-    fun updateAverageSpeedText(it: Float?) {
-        average_speed.text = formatKmH(it)
+    fun updateAverageSpeedText(value: String?) {
+        average_speed.text = value
     }
 
     fun updateCurrentSpeedText(it: Float?) {
@@ -189,8 +189,6 @@ class TripFragment : Fragment() {
     }
 
     private fun formatIntKmH(value: Float?) = "${value?.toInt()}"
-    private fun formatKmH(value: Float?) = "%.2f km/h".format(value)
-    private fun formatKm(value: Float?) = "%.1f km".format(value)
 
     private fun updateStatus() {
         with(positionProvider) {

@@ -4,11 +4,15 @@ operator fun Distance.plusAssign(entry: Float) = add(entry)
 
 class Distance {
 
+    companion object {
+        fun formatToKm(distanceInM: Float) = "%.1f km".format(distanceInM / 1000)
+    }
+
     var overallDistance = 0F
 
     fun add(meters: Float) {
         overallDistance += meters
     }
 
-    fun distanceInKilometers() = overallDistance / 1000
+    fun distanceInKilometersFormatted() =  Distance.formatToKm(overallDistance)
 }

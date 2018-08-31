@@ -25,9 +25,9 @@ class TripViewModel @Inject constructor(
     private var routeId: Long? = null
 
     val currentSpeed = MutableLiveData<Float>()
-    val averageSpeed = MutableLiveData<Float>()
-    val maximumSpeed = MutableLiveData<Float>()
-    val currentDistance = MutableLiveData<Float>()
+    val averageSpeed = MutableLiveData<String>()
+    val maximumSpeed = MutableLiveData<String>()
+    val currentDistance = MutableLiveData<String>()
 
     var points = mutableListOf<GeoPoint>()
     var previousLocation: Location? = null
@@ -100,7 +100,7 @@ class TripViewModel @Inject constructor(
     private fun updateDistance(location: Location) {
         previousLocation?.let { previousLocation ->
             distance += previousLocation.distanceTo(location)
-            currentDistance.value = distance.distanceInKilometers()
+            currentDistance.value = distance.distanceInKilometersFormatted()
         }
     }
 
@@ -108,8 +108,8 @@ class TripViewModel @Inject constructor(
         if (location.hasSpeed()) {
             speed += location.speed
             currentSpeed.value = speed.msToKmh(location.speed)
-            averageSpeed.value = speed.msToKmh(speed.average())
-            maximumSpeed.value = speed.msToKmh(speed.max())
+            averageSpeed.value = speed.msToKmhFormatted(speed.average())
+            maximumSpeed.value = speed.msToKmhFormatted(speed.max())
         }
     }
 }

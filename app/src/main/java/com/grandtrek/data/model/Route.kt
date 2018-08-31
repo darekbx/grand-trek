@@ -1,5 +1,7 @@
 package com.grandtrek.data.model
 
+import com.grandtrek.usecases.Distance
+import com.grandtrek.usecases.Speed
 import com.grandtrek.usecases.Time
 
 data class Route(
@@ -13,7 +15,7 @@ data class Route(
         var color: Int = 0
 ) {
 
-    fun averageSpeedInKmH() = "%.2f km/h".format(averageSpeed * 3.6F)
-    fun distanceInKm() = "%.1f km".format(distance / 1000)
+    fun averageSpeedInKmH() = Speed.formatToKmH(averageSpeed)
+    fun distanceInKm() = Distance.formatToKm(distance)
     fun tripTimeFormatted() = Time.secondsToTimeFormat(tripTime)
 }
