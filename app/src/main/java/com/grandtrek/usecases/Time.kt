@@ -11,7 +11,6 @@ open class Time {
     }
 
     private var timer: Timer? = null
-    private var isPaused = false
 
     var overallTimeValue = 0L
     var rideTimeValue = 0L
@@ -20,11 +19,6 @@ open class Time {
     var isRiding = false
 
     fun start() {
-        if (isPaused) {
-            isPaused = false
-            return
-        }
-
         reset()
         timer = Timer().apply {
             scheduleAtFixedRate(object : TimerTask() {
@@ -38,10 +32,6 @@ open class Time {
     fun stop() {
         timer?.run { cancel() }
         timer = null
-    }
-
-    fun pauseOnOff() {
-        isPaused = !isPaused
     }
 
     fun reset() {
@@ -66,9 +56,6 @@ open class Time {
     }
 
     private fun handleTick() {
-        if (isPaused) {
-            return
-        }
         overallTimeValue++
         overallTime.postValue(overallTimeValue)
         if (isRiding) {

@@ -37,20 +37,6 @@
         app:layout_constraintBottom_toBottomOf="@id/map_view"
         app:layout_constraintEnd_toEndOf="@id/map_view" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/pause_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/outPadding"
-        android:onClick="onPause"
-        android:scaleType="center"
-        android:src="@drawable/ic_pause"
-        app:fabSize="mini"
-        app:layout_constraintBottom_toTopOf="@id/play_stop_button"
-        app:layout_constraintEnd_toEndOf="@id/play_stop_button"
-        android:visibility="gone"
-        />
-
     <TextView
         android:id="@+id/average_speed"
         android:layout_width="wrap_content"
@@ -199,10 +185,10 @@
         android:layout_marginRight="@dimen/outPadding"
         android:text="@string/label_use_offline_map"
         android:onClick="onUseOfflineMap"
-        android:checked="true"
+        android:checked="false"
         />
 
-    <com.grandtrek.ui.trip.views.AltitudeChart
+    <com.grandtrek.ui.trip.views.TripChart
         android:id="@+id/altitude_chart"
         android:layout_width="162dp"
         android:layout_height="48dp"
@@ -220,6 +206,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:background="@color/colorPrimary"
+        app:itemTextColor="@android:color/white"
+        app:itemIconTint="@android:color/white"
+        app:menu="@menu/main_menu"
         />
 
 </android.support.constraint.ConstraintLayout>

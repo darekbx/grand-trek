@@ -4,7 +4,6 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.location.Location
 import com.grandtrek.data.Repository
-import com.grandtrek.data.local.entities.PointEntity
 import com.grandtrek.data.local.entities.RouteEntity
 import com.grandtrek.extensions.toGeoPoint
 import com.grandtrek.usecases.Distance
@@ -43,10 +42,6 @@ class TripViewModel @Inject constructor(
 
     fun setIsRiding(isRiding: Boolean) {
         time.isRiding = isRiding
-    }
-
-    fun pauseOnOff() {
-        time.pauseOnOff()
     }
 
     fun secondsToTimeFormat(secondsIn: Long?) = time.secondsToTimeFormat(secondsIn)

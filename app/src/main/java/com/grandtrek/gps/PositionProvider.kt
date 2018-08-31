@@ -7,6 +7,10 @@ import android.os.Bundle
 
 class PositionProvider(val context: Context) {
 
+    companion object {
+        val MINIMUM_INTERVAL = 1000L
+    }
+
     private var listener: LocationListener? = null
     val liveLocation = MutableLiveData<Location>()
     val liveStatus = MutableLiveData<Status>()
@@ -57,7 +61,7 @@ class PositionProvider(val context: Context) {
                 liveLocation.value = location
             }
         }
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0L, 0F, listener)
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MINIMUM_INTERVAL, 0F, listener)
         locationManager.registerGnssStatusCallback(gnssStatusCallback)
     }
 

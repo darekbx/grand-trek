@@ -7,7 +7,7 @@ import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
 
-class AltitudeChart(context: Context,attributeSet: AttributeSet) : View(context, attributeSet) {
+class TripChart(context: Context, attributeSet: AttributeSet) : View(context, attributeSet) {
 
     companion object {
         val PADDING = 14F
@@ -15,7 +15,8 @@ class AltitudeChart(context: Context,attributeSet: AttributeSet) : View(context,
         val TIME_UNIT = "[t]"
     }
 
-    val altitudes = mutableListOf<Double>()
+    val altitudes = mutableListOf<Float>()
+    val speeds = mutableListOf<Float>()
 
     private val chartAxesPaint = Paint().apply {
         isAntiAlias = true
@@ -34,34 +35,40 @@ class AltitudeChart(context: Context,attributeSet: AttributeSet) : View(context,
         super.onDraw(canvas)
         canvas?.run {
             drawAxes(this)
-            drawAltitudes(this)
+            drawValues(this, altitudes, Color.argb(80, 0, 0, 0))
+            drawValues(this, speeds, Color.argb(150, 240, 60, 50))
         }
     }
 
-    private fun drawAltitudes(canvas: Canvas) {
-        val altitudesSize = altitudes.size
-        if (altitudesSize < 2) {
+    private fun drawValues(canvas: Canvas, values: List<Float>, color: Int) {
+        val itemsCount = values.size
+        if (itemsCount < 2) {
             return
         }
-        var position = PADDING
-        var previous = altitudes[0]
-        val chunkSize = calculateChunkSize(altitudesSize)
-        val ratio = calculateRatio()
+        chartPaint.color = color
 
-        altitudes.forEach {
+        val paddedHeight = height - PADDING.times(2)
+        val reverseHeight = height - PADDING
+        val chunkSize = calculateChunkSize(values).toFloat()
+        val max = values.max() ?: 1F
+        val min = values.min() ?: 1F
+        val heightRatio = (max - min) / paddedHeight
+
+        var position = PADDING
+        var previous = values[0]
+
+        values.forEach {
             val x1 = position
             val x2 = position + chunkSize
-            val y1 = (previous.toFloat() - height) * ratio.toFloat()
-            val y2 = (it.toFloat() - height) * ratio.toFloat()
+            val y1 = reverseHeight - (previous - min) / heightRatio
+            val y2 = reverseHeight - (it - min) / heightRatio
             canvas.drawLine(x1, y1, x2, y2, chartPaint)
             previous = it
             position += chunkSize
         }
     }
 
-    fun calculateChunkSize(altitudesSize: Int) = width.toFloat() / altitudesSize.toFloat()
-
-    fun calculateRatio() = height.toDouble() / (altitudes.max() ?: 1.0)
+    fun calculateChunkSize(list: List<Float>) = (width - PADDING.toDouble()) / list.size.dec()
 
     private fun drawAxes(canvas: Canvas) {
         with(canvas) {

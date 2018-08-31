@@ -16,6 +16,7 @@ import com.grandtrek.R
 import com.grandtrek.extensions.toGeoPoint
 import com.grandtrek.gps.PositionProvider
 import com.grandtrek.permissions.PermissionsHelper
+import com.grandtrek.ui.BaseActivity
 import com.grandtrek.ui.trip.dialogs.SaveRouteDialog
 import com.grandtrek.ui.trip.map.CustomOverlay
 import com.grandtrek.usecases.TripMap
@@ -28,7 +29,7 @@ import org.osmdroid.views.overlay.TilesOverlay
 import java.io.File
 import javax.inject.Inject
 
-class TripActivity : AppCompatActivity() {
+class TripActivity : BaseActivity() {
 
     companion object {
         val PERMISSIONS_REQUEST_CODE = 100
@@ -149,21 +150,9 @@ class TripActivity : AppCompatActivity() {
 
     fun changeButtonsState() {
         when (isRecording) {
-            true -> {
-                play_stop_button.setImageResource(R.drawable.ic_stop)
-                pause_button.show()
-            }
-            false -> {
-                play_stop_button.setImageResource(R.drawable.ic_play)
-                pause_button.hide()
-            }
+            true -> play_stop_button.setImageResource(R.drawable.ic_stop)
+            false -> play_stop_button.setImageResource(R.drawable.ic_play)
         }
-    }
-
-    fun onPause(v: View) {
-        viewModel.pauseOnOff()
-        isRecording = false
-        changeButtonsState()
     }
 
     fun onAutoPositionSwitch(v: View) {
@@ -175,11 +164,12 @@ class TripActivity : AppCompatActivity() {
     }
 
     fun addRemoveOfflineOverlay() {
-        val offlineOverlay = map_view.overlays.firstOrNull { it is TilesOverlay }
+        val offlineOverlayIndex = map_view.overlays.indexOfFirst { it is TilesOverlay }
         when (use_offline_map.isEnabled) {
-            true -> map_view.overlays.add(offlineMapsOverlay())
-            else -> map_view.overlays.remove(offlineOverlay)
+            true -> map_view.overlays.add(0, offlineMapsOverlay())
+            else -> map_view.overlays.removeAt(offlineOverlayIndex)
         }
+        map_view.invalidate()
     }
 
     private fun formatIntKmH(value: Float?) = "${value?.toInt()}"
@@ -248,18 +238,32 @@ class TripActivity : AppCompatActivity() {
 
     private fun updateLocation(location: Location) {
         if (location.speed > MINIMUM_RECORDED_SPEED) {
-            val geoPoint = location.toGeoPoint()
-            viewModel.updateLocation(location)
-            currentLocationOverlay.currentPosition = geoPoint
-            currentLocationOverlay.points = viewModel.points
+            notifyNewLocation(location)
+        } else {
+            updateCurrentSpeedText(0F)
+            updateIsRiding(0F)
         }
-        altitude_chart.altitudes.add(location.altitude)
-        altitude_chart.invalidate()
         with(map_view.controller) {
-            setZoom(zoom)
             if (isAutoPositionOn) {
+                setZoom(zoom)
                 animateTo(location.toGeoPoint())
             }
+        }
+    }
+
+    fun notifyNewLocation(location: Location) {
+        val geoPoint = location.toGeoPoint()
+        viewModel.updateLocation(location)
+        currentLocationOverlay.currentPosition = geoPoint
+        currentLocationOverlay.points = viewModel.points
+        updateAltitude(location)
+    }
+
+    fun updateAltitude(location: Location) {
+        with(altitude_chart) {
+            altitudes.add(location.altitude.toFloat())
+            speeds.add(location.speed)
+            invalidate()
         }
     }
 
@@ -270,13 +274,11 @@ class TripActivity : AppCompatActivity() {
         }
         initializeLayout()
 
-        val overlayOffline = offlineMapsOverlay()
         with(map_view) {
             setTileSource(TileSourceFactory.MAPNIK)
             setBuiltInZoomControls(true)
             setMultiTouchControls(true)
             setMaxZoomLevel(TripMap.MAX_ZOOM)
-            overlays.add(overlayOffline)
             overlays.add(currentLocationOverlay)
         }
 
@@ -302,7 +304,8 @@ class TripActivity : AppCompatActivity() {
 
     private fun initializeLayout() {
         setContentView(R.layout.activity_trip)
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        handleNavigation(navigation)
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
 
     private fun handlePermissionsDenial() {
