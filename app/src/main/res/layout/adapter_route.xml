@@ -16,37 +16,61 @@
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:padding="@dimen/outPadding"
+            android:paddingTop="@dimen/outPadding"
+            android:paddingLeft="@dimen/outPadding"
             android:text="@{route.name}"
-            tools:text="WAT (Czerwona)"
-            android:textColor="#000"
+            tools:text="WAT - czerwona"
+            android:textColor="@android:color/black"
             android:textStyle="bold"
+            />
+        <TextView
+            android:id="@+id/date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/name"
+            app:layout_constraintStart_toStartOf="@id/name"
+            android:paddingTop="@dimen/smallPadding"
+            android:paddingLeft="@dimen/outPadding"
+            tools:text="03-09-2018"
+            android:text="@{route.dateFormatted()}"
             />
 
         <TextView
             android:id="@+id/distance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:paddingRight="@dimen/outPadding"
-            android:paddingTop="@dimen/outPadding"
+            app:layout_constraintTop_toBottomOf="@id/date"
+            app:layout_constraintStart_toStartOf="parent"
+            android:paddingLeft="@dimen/outPadding"
+            android:paddingTop="@dimen/smallPadding"
             android:text="@{`Distance ` + route.distanceInKm()}"
             tools:text="38.21km"
-            android:textColor="#000"
+            android:textColor="@android:color/black"
             />
+
         <TextView
             android:id="@+id/average_speed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/distance"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:paddingRight="@dimen/outPadding"
-            android:paddingTop="@dimen/smallPadding"
-            android:text="@{`Average speed ` + route.averageSpeedInKmH()}"
+            android:paddingTop="@dimen/outPadding"
+            android:text="@{route.averageSpeedInKmH()}"
             tools:text="21.34km/h"
-            android:textColor="#000"
+            android:textColor="@android:color/black"
             />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintRight_toLeftOf="@id/average_speed"
+            app:layout_constraintTop_toTopOf="@id/average_speed"
+            app:layout_constraintBottom_toBottomOf="@id/average_speed"
+            android:paddingTop="@dimen/outPadding"
+            android:paddingRight="@dimen/smallPadding"
+            android:text="@string/label_average_speed"
+            />
+
         <TextView
             android:id="@+id/trip_time"
             android:layout_width="wrap_content"
@@ -55,9 +79,19 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:paddingRight="@dimen/outPadding"
             android:paddingTop="@dimen/smallPadding"
-            android:text="@{`Trip time ` + route.tripTimeFormatted()}"
+            android:text="@{route.tripTimeFormatted()}"
             tools:text="0:34:12"
-            android:textColor="#000"
+            android:textColor="@android:color/black"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintRight_toLeftOf="@id/trip_time"
+            app:layout_constraintTop_toTopOf="@id/trip_time"
+            app:layout_constraintBottom_toBottomOf="@id/trip_time"
+            android:paddingTop="@dimen/smallPadding"
+            android:paddingRight="@dimen/smallPadding"
+            android:text="@string/label_trip_time"
             />
         <TextView
             android:id="@+id/ride_time"
@@ -67,9 +101,29 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:paddingRight="@dimen/outPadding"
             android:paddingTop="@dimen/smallPadding"
-            android:text="@{`Ride time ` + route.rideTimeFormatted()}"
+            android:text="@{route.rideTimeFormatted()}"
             tools:text="0:34:12"
-            android:textColor="#000"
+            android:textColor="@android:color/black"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintRight_toLeftOf="@id/ride_time"
+            app:layout_constraintTop_toTopOf="@id/ride_time"
+            app:layout_constraintBottom_toBottomOf="@id/ride_time"
+            android:paddingTop="@dimen/smallPadding"
+            android:paddingRight="@dimen/smallPadding"
+            android:text="@string/label_ride_time"
+            />
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/outPadding"
+            app:layout_constraintTop_toBottomOf="@id/distance"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:background="@android:color/darker_gray"
             />
 
     </android.support.constraint.ConstraintLayout>

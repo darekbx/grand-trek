@@ -26,8 +26,6 @@ class RouteFragment : Fragment() {
     lateinit var viewModelFactory: ViewModelProvider.Factory
     internal lateinit var viewModel: RouteViewModel
 
-    private lateinit var routesAdapter: RoutesAdapter
-
     var routeId = 0L
     val currentLocationOverlay = CustomPointsOverlay()
 

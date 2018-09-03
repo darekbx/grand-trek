@@ -20,4 +20,5 @@ data class Route(
     fun distanceInKm() = Distance.formatToKm(distance)
     fun tripTimeFormatted() = Time.secondsToTimeFormat(tripTime)
     fun rideTimeFormatted() = Time.secondsToTimeFormat(rideTime)
+    fun dateFormatted() = Time.millisToDate(date)
 }

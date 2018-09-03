@@ -1,6 +1,7 @@
 package com.grandtrek.usecases
 
 import android.arch.lifecycle.MutableLiveData
+import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -8,6 +9,7 @@ open class Time {
 
     companion object {
         val TIME_FORMAT = "%d:%02d:%02d"
+        val DATE_FORMAT = "dd-mm-yyyy"
 
         fun secondsToTimeFormat(secondsIn: Long?): String {
             return secondsIn?.run {
@@ -23,6 +25,12 @@ open class Time {
 
                 return TIME_FORMAT.format(hours, minutes, seconds)
             } ?: ""
+        }
+
+        fun millisToDate(timeStamp: Long) = dateFprmatter.format(timeStamp)
+
+        private val dateFprmatter by lazy {
+            SimpleDateFormat(DATE_FORMAT)
         }
     }
 
