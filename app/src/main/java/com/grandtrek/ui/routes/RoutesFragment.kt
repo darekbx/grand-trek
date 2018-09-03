@@ -11,6 +11,8 @@ import android.view.View
 import android.view.ViewGroup
 import com.grandtrek.GrandTrekApplication
 import com.grandtrek.R
+import com.grandtrek.data.model.Route
+import com.grandtrek.ui.route.RouteFragment
 import kotlinx.android.synthetic.main.fragment_routes.*
 import javax.inject.Inject
 
@@ -36,13 +38,27 @@ class RoutesFragment : Fragment() {
 
             viewModel = ViewModelProviders.of(this@RoutesFragment, viewModelFactory)[RoutesViewModel::class.java]
             viewModel.fetchRoutes().observe(this@RoutesFragment, Observer { routes ->
-                routes?.let {
-
-                    routesAdapter = RoutesAdapter(this, { route -> })
-                    routes_list.adapter = routesAdapter
-                    routesAdapter.swapData(it)
-                }
+                routes?.let { fillData(it) }
             })
+        }
+    }
+
+    private fun fillData(it: List<Route>) {
+        context?.run {
+            routesAdapter = RoutesAdapter(this, { route -> openRoute(route) })
+            routes_list.adapter = routesAdapter
+            routesAdapter.swapData(it)
+        }
+    }
+
+    private fun openRoute(route: Route) {
+        route.id?.let { routeId ->
+            activity?.supportFragmentManager?.run {
+                beginTransaction()
+                        .replace(R.id.container,  RouteFragment().apply { this.routeId = routeId })
+                        .addToBackStack(null)
+                        .commit()
+            }
         }
     }
 }

@@ -16,6 +16,9 @@ interface CommonDao {
     @Insert
     fun addPoint(pointEntity: PointEntity)
 
+    @Query("SELECT * FROM route WHERE id = :routeId")
+    fun fetchRoute(routeId: Long): LiveData<RouteEntity>
+
     @Query("SELECT * FROM route")
     fun fetchRoutes(): LiveData<List<RouteEntity>>
 

@@ -1,10 +1,12 @@
 package com.grandtrek.ui
 
 import android.os.Bundle
-import android.support.v4.view.ViewPager
+import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
 import com.grandtrek.R
+import com.grandtrek.ui.routes.RoutesFragment
+import com.grandtrek.ui.statistics.StatisticsFragment
 import com.grandtrek.ui.trip.TripFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -15,38 +17,32 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         handleNavigation()
 
-        pager.adapter = pageAdapter
-        pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-            override fun onPageScrollStateChanged(state: Int) {}
-
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
-
-            override fun onPageSelected(position: Int) {
-                selectActiveMenuItem(position)
-            }
-        })
-    }
-
-    fun selectActiveMenuItem(position: Int) {
-        with(navigation.menu) {
-            (0..size()).forEach { getItem(position).isChecked = false }
-            getItem(position).isChecked = true
-        }
+        navigation.selectedItemId = R.id.action_trip
     }
 
     fun handleNavigation() {
         navigation.setOnNavigationItemSelectedListener {
-            when {
-                it.itemId == R.id.action_trip -> pager.currentItem = 0
-                it.itemId == R.id.action_routes && checkIfCanChange() -> pager.currentItem = 1
-                it.itemId == R.id.action_statistics && checkIfCanChange() -> pager.currentItem = 2
-            }
+            setFragment(when {
+                it.itemId == R.id.action_trip -> TripFragment()
+                it.itemId == R.id.action_routes && checkIfCanChange() -> RoutesFragment()
+                it.itemId == R.id.action_statistics && checkIfCanChange() -> StatisticsFragment()
+                else -> null
+            })
             return@setOnNavigationItemSelectedListener true
         }
     }
 
+    private fun setFragment(fragment: Fragment?) {
+        fragment?.let { fragment ->
+            supportFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.container, fragment, fragment::class.java.simpleName)
+                    .commit()
+        }
+    }
+
     private fun checkIfCanChange(): Boolean {
-        val currentFragment = pageAdapter.instantiateItem(pager, pager.currentItem)
+        val currentFragment = supportFragmentManager.findFragmentByTag(TripFragment::class.java.simpleName)
         return when (currentFragment) {
             is TripFragment -> {
                 val isRecording = currentFragment.isRecording().also { isRecording ->
@@ -58,7 +54,6 @@ class MainActivity : AppCompatActivity() {
             }
             else -> false
         }
+        return true
     }
-
-    private val pageAdapter by lazy { PagerAdpater(supportFragmentManager) }
 }
