@@ -59,6 +59,18 @@
             tools:text="0:34:12"
             android:textColor="#000"
             />
+        <TextView
+            android:id="@+id/ride_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/trip_time"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:paddingRight="@dimen/outPadding"
+            android:paddingTop="@dimen/smallPadding"
+            android:text="@{`Ride time ` + route.rideTimeFormatted()}"
+            tools:text="0:34:12"
+            android:textColor="#000"
+            />
 
     </android.support.constraint.ConstraintLayout>
 </layout>

@@ -11,6 +11,7 @@ data class Route(
         var averageSpeed: Float = 0F,
         var maximumSpeed: Float = 0F,
         var tripTime: Long = 0L,
+        var rideTime: Long = 0L,
         var date: Long = 0L,
         var color: Int = 0
 ) {
@@ -18,4 +19,5 @@ data class Route(
     fun averageSpeedInKmH() = Speed.formatToKmH(averageSpeed)
     fun distanceInKm() = Distance.formatToKm(distance)
     fun tripTimeFormatted() = Time.secondsToTimeFormat(tripTime)
+    fun rideTimeFormatted() = Time.secondsToTimeFormat(rideTime)
 }

@@ -29,6 +29,7 @@ class TripViewModel @Inject constructor(
     val maximumSpeed = MutableLiveData<String>()
     val currentDistance = MutableLiveData<String>()
 
+    var isRecording = false
     var points = mutableListOf<GeoPoint>()
     var previousLocation: Location? = null
 
@@ -64,7 +65,9 @@ class TripViewModel @Inject constructor(
                 maximumSpeed = speed.max(),
                 color = color,
                 date = Calendar.getInstance().timeInMillis,
-                tripTime = time.overallTimeValue)
+                tripTime = time.overallTimeValue,
+                rideTime = time.rideTimeValue
+                )
         async {
             repository.updateRoute(route)
         }
@@ -81,7 +84,10 @@ class TripViewModel @Inject constructor(
     fun updateLocation(location: Location) {
         updateDistance(location)
         updateSpeed(location)
-        saveLocation(location)
+
+        if (isRecording) {
+            saveLocation(location)
+        }
 
         val geoPoint = location.toGeoPoint()
         points.add(geoPoint)

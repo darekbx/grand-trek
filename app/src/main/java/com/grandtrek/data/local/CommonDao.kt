@@ -25,10 +25,11 @@ interface CommonDao {
     @Query("""UPDATE route
         SET
         name = :name, distance = :distance, average_spped = :averageSpeed,
-        maximum_spped = :maximumSpeed, triptime = :tripTime, date = :date, color = :color
+        maximum_spped = :maximumSpeed, triptime = :tripTime, rideTime = :rideTime,
+        date = :date, color = :color
         WHERE id = :routeId""")
     fun updateRoute(routeId: Long?, name: String?, distance: Float, averageSpeed: Float,
-                    maximumSpeed: Float, color: Int, date: Long, tripTime: Long)
+                    maximumSpeed: Float, color: Int, date: Long, tripTime: Long, rideTime: Long)
 
     @Query("DELETE FROM point WHERE route_id = :routeId")
     fun deletePoints(routeId: Long)

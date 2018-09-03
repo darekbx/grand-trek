@@ -51,7 +51,6 @@ class TripFragment : Fragment() {
     internal lateinit var viewModel: TripViewModel
 
     val zoom = TripMap.DEFAULT_ZOOM
-    var isRecording = false
     var isAutoPositionOn = true
     val currentLocationOverlay = CustomOverlay()
 
@@ -73,6 +72,8 @@ class TripFragment : Fragment() {
 
         handleButtons()
     }
+
+    fun isRecording() = viewModel.isRecording
 
     fun handleButtons() {
         play_stop_button.setOnClickListener { onStartStop() }
@@ -149,11 +150,11 @@ class TripFragment : Fragment() {
     }
 
     fun onStartStop() {
-        isRecording = !isRecording
+        viewModel.isRecording = !viewModel.isRecording
         changeButtonsState()
         handleRecordingState()
 
-        if (isRecording) {
+        if (viewModel.isRecording) {
             viewModel.createRoute()
         } else {
             context?.run {
@@ -165,9 +166,17 @@ class TripFragment : Fragment() {
     }
 
     fun changeButtonsState() {
-        when (isRecording) {
-            true -> play_stop_button.setImageResource(R.drawable.ic_stop)
-            false -> play_stop_button.setImageResource(R.drawable.ic_play)
+        with(play_stop_button) {
+            when (viewModel.isRecording) {
+                true -> {
+                    setImageResource(R.drawable.ic_stop)
+                    tag = true
+                }
+                false -> {
+                    setImageResource(R.drawable.ic_play)
+                    tag = false
+                }
+            }
         }
     }
 
@@ -195,6 +204,10 @@ class TripFragment : Fragment() {
             status.text = getString(R.string.status_format,
                     liveSatellites.value ?: 0,
                     liveStatus.value?.toString())
+
+            if (liveStatus.value == PositionProvider.Status.AVAILABLE) {
+                play_stop_button.show()
+            }
         }
     }
 
@@ -205,7 +218,7 @@ class TripFragment : Fragment() {
     }
 
     private fun handleRecordingState() {
-        when (isRecording) {
+        when (viewModel.isRecording) {
             true -> viewModel.startTime()
             else -> viewModel.stopTime()
         }
@@ -253,7 +266,7 @@ class TripFragment : Fragment() {
     }
 
     private fun updateLocation(location: Location) {
-        if (location.speed > MINIMUM_RECORDED_SPEED) {
+        if (location.speed >= MINIMUM_RECORDED_SPEED) {
             notifyNewLocation(location)
         } else {
             updateCurrentSpeedText(0F)

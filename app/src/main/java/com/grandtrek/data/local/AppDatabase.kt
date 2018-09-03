@@ -5,7 +5,7 @@ import android.arch.persistence.room.RoomDatabase
 import com.grandtrek.data.local.entities.PointEntity
 import com.grandtrek.data.local.entities.RouteEntity
 
-@Database(entities = arrayOf(RouteEntity::class, PointEntity::class), version = 1)
+@Database(entities = arrayOf(RouteEntity::class, PointEntity::class), version = 2)
 abstract class AppDatabase: RoomDatabase() {
 
     companion object {

@@ -12,6 +12,7 @@ data class RouteEntity(
         @ColumnInfo(name = "average_spped") var averageSpeed: Float = 0F,
         @ColumnInfo(name = "maximum_spped") var maximumSpeed: Float = 0F,
         @ColumnInfo(name = "triptime") var tripTime: Long = 0L,
+        @ColumnInfo(name = "ridetime") var rideTime: Long = 0L,
         @ColumnInfo(name = "date") var date: Long = 0L,
         @ColumnInfo(name = "color") var color: Int = 0
 )

@@ -22,4 +22,5 @@
     <string name="label_use_offline_map">Use offline map</string>
     <string name="label_save_route">Save route</string>
     <string name="hint_route_name">Route name</string>
+    <string name="stop_recording">Stop recording if you want to continue</string>
 </resources>

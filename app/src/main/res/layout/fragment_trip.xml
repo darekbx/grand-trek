@@ -34,7 +34,9 @@
         android:layout_marginEnd="@dimen/outPadding"
         android:src="@drawable/ic_play"
         app:layout_constraintBottom_toBottomOf="@id/map_view"
-        app:layout_constraintEnd_toEndOf="@id/map_view" />
+        app:layout_constraintEnd_toEndOf="@id/map_view"
+        android:visibility="gone"
+        />
 
     <TextView
         android:id="@+id/average_speed"

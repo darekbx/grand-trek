@@ -3,7 +3,9 @@ package com.grandtrek.ui
 import android.os.Bundle
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
+import android.widget.Toast
 import com.grandtrek.R
+import com.grandtrek.ui.trip.TripFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -15,9 +17,9 @@ class MainActivity : AppCompatActivity() {
 
         pager.adapter = pageAdapter
         pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-            override fun onPageScrollStateChanged(p0: Int) {}
+            override fun onPageScrollStateChanged(state: Int) {}
 
-            override fun onPageScrolled(p0: Int, p1: Float, p2: Int) {}
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
 
             override fun onPageSelected(position: Int) {
                 selectActiveMenuItem(position)
@@ -34,12 +36,27 @@ class MainActivity : AppCompatActivity() {
 
     fun handleNavigation() {
         navigation.setOnNavigationItemSelectedListener {
-            when (it.itemId) {
-                R.id.action_trip -> pager.currentItem = 0
-                R.id.action_routes -> pager.currentItem = 1
-                R.id.action_statistics -> pager.currentItem = 2
+            when {
+                it.itemId == R.id.action_trip -> pager.currentItem = 0
+                it.itemId == R.id.action_routes && checkIfCanChange() -> pager.currentItem = 1
+                it.itemId == R.id.action_statistics && checkIfCanChange() -> pager.currentItem = 2
             }
             return@setOnNavigationItemSelectedListener true
+        }
+    }
+
+    private fun checkIfCanChange(): Boolean {
+        val currentFragment = pageAdapter.instantiateItem(pager, pager.currentItem)
+        return when (currentFragment) {
+            is TripFragment -> {
+                val isRecording = currentFragment.isRecording().also { isRecording ->
+                    if (isRecording) {
+                        Toast.makeText(this, R.string.stop_recording, Toast.LENGTH_SHORT).show()
+                    }
+                }
+                return !isRecording
+            }
+            else -> false
         }
     }
 

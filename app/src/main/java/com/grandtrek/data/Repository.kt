@@ -15,7 +15,7 @@ class Repository @Inject constructor(
     fun routes() = Transformations.map(dao.fetchRoutes(), { list ->
         list.map {
             Route(it.id, it.name, it.distance, it.averageSpeed,
-                    it.maximumSpeed, it.tripTime, it.date, it.color)
+                    it.maximumSpeed, it.tripTime, it.rideTime, it.date, it.color)
         }
     })
 
@@ -34,7 +34,7 @@ class Repository @Inject constructor(
 
     fun updateRoute(routeEntity: RouteEntity) {
         with(routeEntity) {
-            dao.updateRoute(id, name, distance, averageSpeed, maximumSpeed, color, date, tripTime)
+            dao.updateRoute(id, name, distance, averageSpeed, maximumSpeed, color, date, tripTime, rideTime)
         }
     }
 
