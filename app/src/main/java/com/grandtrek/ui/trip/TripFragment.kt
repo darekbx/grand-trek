@@ -19,7 +19,7 @@ import com.grandtrek.extensions.toGeoPoint
 import com.grandtrek.gps.PositionProvider
 import com.grandtrek.permissions.PermissionsHelper
 import com.grandtrek.ui.trip.dialogs.SaveRouteDialog
-import com.grandtrek.ui.trip.map.CustomOverlay
+import com.grandtrek.ui.trip.map.TripOverlay
 import com.grandtrek.usecases.TripMap
 import com.grandtrek.utils.UiUtils
 import kotlinx.android.synthetic.main.fragment_trip.*
@@ -52,7 +52,7 @@ class TripFragment : Fragment() {
 
     val zoom = TripMap.DEFAULT_ZOOM
     var isAutoPositionOn = true
-    val currentLocationOverlay = CustomOverlay()
+    val currentLocationOverlay = TripOverlay()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_trip, container, false)

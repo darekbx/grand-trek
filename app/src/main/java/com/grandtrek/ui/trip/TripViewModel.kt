@@ -11,7 +11,7 @@ import com.grandtrek.usecases.Speed
 import com.grandtrek.usecases.Time
 import com.grandtrek.usecases.plusAssign
 import kotlinx.coroutines.experimental.async
-import org.osmdroid.util.GeoPoint
+import org.osmdroid.api.IGeoPoint
 import java.util.*
 import javax.inject.Inject
 
@@ -30,7 +30,7 @@ class TripViewModel @Inject constructor(
     val currentDistance = MutableLiveData<String>()
 
     var isRecording = false
-    var points = mutableListOf<GeoPoint>()
+    var points = mutableListOf<IGeoPoint>()
     var previousLocation: Location? = null
 
     fun startTime() {

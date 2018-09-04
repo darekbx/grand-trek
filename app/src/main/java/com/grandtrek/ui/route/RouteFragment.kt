@@ -11,7 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.grandtrek.GrandTrekApplication
 import com.grandtrek.R
-import com.grandtrek.ui.routes.RoutesAdapter
+import com.grandtrek.data.model.Route
 import com.grandtrek.usecases.TripMap
 import kotlinx.android.synthetic.main.fragment_trip.*
 import org.osmdroid.config.Configuration
@@ -27,7 +27,7 @@ class RouteFragment : Fragment() {
     internal lateinit var viewModel: RouteViewModel
 
     var routeId = 0L
-    val currentLocationOverlay = CustomPointsOverlay()
+    val currentLocationOverlay = RouteMapOverlay()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_route, container, false)
@@ -41,9 +41,11 @@ class RouteFragment : Fragment() {
 
         context?.run {
             viewModel = ViewModelProviders.of(this@RouteFragment, viewModelFactory)[RouteViewModel::class.java]
+            viewModel.fetchRoute(routeId).observe(this@RouteFragment, Observer { route ->
+                route?.let { route -> applyRoute(route)}
+            })
             viewModel.fetchRoutePoints(routeId).observe(this@RouteFragment, Observer { points ->
 
-                currentLocationOverlay.currentPosition = points?.first()
                 currentLocationOverlay.points = points?.toMutableList()
                 map_view.overlays.add(currentLocationOverlay)
                 map_view.invalidate()
@@ -57,6 +59,14 @@ class RouteFragment : Fragment() {
                 }
             })
         }
+    }
+
+    private fun applyRoute(route: Route) {
+        with(currentLocationOverlay) {
+            getPaint().color = route.color
+        }
+        map_view.invalidate()
+
     }
 
     private fun initializeMap() {
