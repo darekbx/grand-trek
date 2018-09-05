@@ -19,6 +19,8 @@ class SaveRouteDialog(
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.dialog_save_route)
+        setCancelable(false)
+        setCanceledOnTouchOutside(false)
 
         buttons = arrayOf(color_violet, color_red, color_orange, color_green, color_blue)
         buttons.forEach {

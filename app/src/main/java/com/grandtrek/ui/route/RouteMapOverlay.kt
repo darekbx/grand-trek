@@ -15,6 +15,10 @@ class RouteMapOverlay : BaseOverlay() {
         strokeWidth = LINE_SIZE
     }
 
+    fun updateColor(color: Int) {
+        customPaint.color = color
+    }
+
     override fun getPaint() = customPaint
 
     override fun draw(canvas: Canvas?, osmv: MapView?, shadow: Boolean) {

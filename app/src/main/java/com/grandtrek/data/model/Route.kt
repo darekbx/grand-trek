@@ -17,6 +17,7 @@ data class Route(
 ) {
 
     fun averageSpeedInKmH() = Speed.formatToKmH(averageSpeed)
+    fun maximumSpeedInKmH() = Speed.formatToKmH(maximumSpeed)
     fun distanceInKm() = Distance.formatToKm(distance)
     fun tripTimeFormatted() = Time.secondsToTimeFormat(tripTime)
     fun rideTimeFormatted() = Time.secondsToTimeFormat(rideTime)
