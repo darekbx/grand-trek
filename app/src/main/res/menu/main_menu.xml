@@ -8,8 +8,4 @@
         android:id="@+id/action_routes"
         android:title="@string/menu_routes"
         android:icon="@drawable/ic_baseline_list_24px" />
-    <item
-        android:id="@+id/action_statistics"
-        android:title="@string/menu_statistics"
-        android:icon="@drawable/ic_baseline_show_chart_24px" />
 </menu>

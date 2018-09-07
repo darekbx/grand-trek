@@ -9,7 +9,6 @@
 
     <string name="menu_trip">Trip</string>
     <string name="menu_routes">Routes</string>
-    <string name="menu_statistics">Statistics</string>
 
     <string name="status_format">Satellites: %d, Status: %s</string>
     <string name="label_average_speed">Average Speed</string>
@@ -23,4 +22,7 @@
     <string name="label_save_route">Save route</string>
     <string name="hint_route_name">Route name</string>
     <string name="stop_recording">Stop recording if you want to continue</string>
+    <string name="delete_confirm">Delete route &lt;b>%s&lt;/b>?</string>
+    <string name="delete_yes">Yes</string>
+    <string name="delete_no">No</string>
 </resources>

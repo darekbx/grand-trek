@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
 import com.grandtrek.R
 import com.grandtrek.ui.routes.RoutesFragment
-import com.grandtrek.ui.statistics.StatisticsFragment
 import com.grandtrek.ui.trip.TripFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -19,13 +18,11 @@ class MainActivity : AppCompatActivity() {
 
         navigation.selectedItemId = R.id.action_trip
     }
-
     fun handleNavigation() {
         navigation.setOnNavigationItemSelectedListener {
             setFragment(when {
                 it.itemId == R.id.action_trip -> TripFragment()
                 it.itemId == R.id.action_routes && checkIfCanChange() -> RoutesFragment()
-                it.itemId == R.id.action_statistics && checkIfCanChange() -> StatisticsFragment()
                 else -> null
             })
             return@setOnNavigationItemSelectedListener true

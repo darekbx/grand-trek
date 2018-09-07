@@ -5,7 +5,9 @@ import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
+import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -45,7 +47,10 @@ class RoutesFragment : Fragment() {
 
     private fun fillData(it: List<Route>) {
         context?.run {
-            routesAdapter = RoutesAdapter(this, { route -> openRoute(route) })
+            routesAdapter = RoutesAdapter(
+                    this,
+                    { route -> openRoute(route) },
+                    { route -> askDeleteRoute(route) })
             routes_list.adapter = routesAdapter
             routesAdapter.swapData(it)
         }
@@ -60,5 +65,23 @@ class RoutesFragment : Fragment() {
                         .commit()
             }
         }
+    }
+
+    private fun askDeleteRoute(route: Route) {
+        context?.run {
+            route.id?.let { routeId ->
+                val message = Html.fromHtml(getString(R.string.delete_confirm, route.name), Html.FROM_HTML_MODE_COMPACT)
+                AlertDialog
+                        .Builder(this)
+                        .setMessage(message)
+                        .setPositiveButton(R.string.delete_yes, { a, b -> deleteRoute(routeId) })
+                        .setNegativeButton(R.string.delete_no, null)
+                        .show()
+            }
+        }
+    }
+
+    private fun deleteRoute(routeId: Long) {
+        viewModel.deleteRoute(routeId)
     }
 }

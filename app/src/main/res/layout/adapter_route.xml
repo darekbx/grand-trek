@@ -77,6 +77,8 @@
             android:layout_width="0dp"
             android:layout_height="1dp"
             android:layout_marginTop="@dimen/outPadding"
+            android:layout_marginStart="@dimen/outPadding"
+            android:layout_marginEnd="@dimen/outPadding"
             app:layout_constraintTop_toBottomOf="@id/trip_time"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

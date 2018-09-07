@@ -7,7 +7,9 @@ import android.view.ViewGroup
 import com.grandtrek.data.model.Route
 import com.grandtrek.databinding.AdapterRouteBinding
 
-class RoutesAdapter(val context: Context, val onItemClick: (route: Route) -> Unit)
+class RoutesAdapter(val context: Context,
+                    val onItemClick: (route: Route) -> Unit,
+                    val onLongItemClick: (route: Route) -> Unit)
     : RecyclerView.Adapter<RoutesAdapter.ViewHolder>() {
 
     var routes = listOf<Route>()
@@ -28,7 +30,7 @@ class RoutesAdapter(val context: Context, val onItemClick: (route: Route) -> Uni
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         val part = routes.get(position)
-        viewHolder.bind(part, onItemClick)
+        viewHolder.bind(part, onItemClick, onLongItemClick)
     }
 
     val inflater by lazy { LayoutInflater.from(context) }
@@ -36,10 +38,16 @@ class RoutesAdapter(val context: Context, val onItemClick: (route: Route) -> Uni
     class ViewHolder(val binding: AdapterRouteBinding) :
             RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(route: Route, onItemClick: (route: Route) -> Unit) {
+        fun bind(route: Route,
+                 onItemClick: (route: Route) -> Unit,
+                 onLongItemClick: (route: Route) -> Unit) {
             binding.route = route
             with(binding) {
                 root.setOnClickListener { onItemClick(route) }
+                root.setOnLongClickListener {
+                    onLongItemClick(route)
+                    true
+                }
                 executePendingBindings()
             }
         }
