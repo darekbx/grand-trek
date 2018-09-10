@@ -9,7 +9,7 @@ open class Time {
 
     companion object {
         val TIME_FORMAT = "%d:%02d:%02d"
-        val DATE_FORMAT = "dd-mm-yyyy"
+        val DATE_FORMAT = "dd-MM-yyyy"
 
         fun secondsToTimeFormat(secondsIn: Long?): String {
             return secondsIn?.run {
@@ -27,9 +27,9 @@ open class Time {
             } ?: ""
         }
 
-        fun millisToDate(timeStamp: Long) = dateFprmatter.format(timeStamp)
+        fun millisToDate(timeStamp: Long) = dateFormatter.format(timeStamp)
 
-        private val dateFprmatter by lazy {
+        private val dateFormatter by lazy {
             SimpleDateFormat(DATE_FORMAT)
         }
     }
